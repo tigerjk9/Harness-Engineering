@@ -73,6 +73,12 @@ temp/
 .objective-baseline
 objective-loop-log.md
 
+# Claude Code / 플러그인 자동 생성 상태 파일 (로컬 전용)
+.claude/settings.local.json
+.bkit/
+docs/.pdca-status.json
+docs/.pdca-snapshots/
+
 # ────────────────────────────────────────
 # 주의: 다음은 절대 .gitignore에 추가하지 말 것
 # - CLAUDE.md (AI 하네스 핵심 파일)
