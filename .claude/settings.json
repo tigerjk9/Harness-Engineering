@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '💡 EduHarness: 작업 완료 후 progress.md를 업데이트하셨나요?'"
+          }
+        ]
+      }
+    ]
+  }
+}

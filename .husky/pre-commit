@@ -1,0 +1,180 @@
+#!/usr/bin/env sh
+# EduHarness Foundation — pre-commit 자동 검증 훅
+# 커밋 전에 자동으로 실행됩니다.
+#
+# 검증 차원: 기술(1-3) + 교육 도메인(4-6)
+# 상세 루브릭: docs/verification-rubric.md
+# Husky 초기화: npm install --save-dev husky && npx husky init
+#
+# 마지막 수정: 2026-03-29
+
+echo ""
+echo "🔍 EduHarness 사전 검증 시작..."
+echo "================================"
+echo "  [UNIVERSAL] 체크 1-3: 범용 코드 품질"
+echo "  [EDU-DOMAIN] 체크 4-6: 교육 도메인 전용"
+echo ""
+
+# ────────────────────────────────────────
+# [UNIVERSAL] 1. ESLint — 코드 품질 검사
+# ────────────────────────────────────────
+if [ -f "package.json" ] && grep -q '"lint"' package.json; then
+  echo ""
+  echo "📋 [1/3] ESLint 검사 중..."
+  npm run lint
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ ESLint 오류가 발견됐습니다."
+    echo "   'npm run lint' 명령어로 오류를 확인하고 수정 후 다시 커밋하세요."
+    echo ""
+    exit 1
+  fi
+  echo "✅ ESLint 통과"
+else
+  echo "⏭️  [1/3] ESLint 건너뜀 (설정 없음)"
+fi
+
+# ────────────────────────────────────────
+# [UNIVERSAL] 2. TypeScript 타입 체크
+# ────────────────────────────────────────
+if [ -f "tsconfig.json" ]; then
+  echo ""
+  echo "🔷 [2/3] TypeScript 타입 검사 중..."
+  npx tsc --noEmit
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ TypeScript 타입 오류가 발견됐습니다."
+    echo "   'npx tsc --noEmit' 명령어로 오류를 확인하고 수정 후 다시 커밋하세요."
+    echo ""
+    exit 1
+  fi
+  echo "✅ TypeScript 타입 체크 통과"
+else
+  echo "⏭️  [2/3] TypeScript 검사 건너뜀 (tsconfig.json 없음)"
+fi
+
+# ────────────────────────────────────────
+# [UNIVERSAL] 3. 테스트 실행
+# ────────────────────────────────────────
+if [ -f "package.json" ] && grep -q '"test"' package.json; then
+  echo ""
+  echo "🧪 [3/3] 테스트 실행 중..."
+  # --passWithNoTests: 테스트 파일이 없어도 통과 (빈 프로젝트 허용)
+  npm test -- --passWithNoTests 2>/dev/null || npm test -- --passWithNoTests
+  if [ $? -ne 0 ]; then
+    echo ""
+    echo "❌ 테스트가 실패했습니다."
+    echo "   실패한 테스트를 수정하거나 'git commit --no-verify'로 우회할 수 있습니다."
+    echo "   (단, 우회는 긴급 상황에만 사용하세요)"
+    echo ""
+    exit 1
+  fi
+  echo "✅ 테스트 통과"
+else
+  echo "⏭️  [3/3] 테스트 건너뜀 (설정 없음)"
+fi
+
+# ────────────────────────────────────────
+# [EDU-DOMAIN] 4. 평가 무결성 검사 — CRITICAL
+# ⚠️ 교육 앱이 아니라면 이 체크(4-6)를 삭제하세요
+#    총괄평가 API에 정답 정보 노출 방지
+#    위반 시: 학생이 DevTools로 정답을 볼 수 있어 평가 신뢰도 파괴
+# ────────────────────────────────────────
+if [ -d "src" ]; then
+  echo ""
+  echo "🎓 [4/6] 평가 무결성: 정답 노출 검사..."
+
+  INTEGRITY_VIOLATION=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" 2>/dev/null \
+    | xargs grep -ln "isCorrect.*:.*true\|\"isCorrect\".*true\|correctAnswerId" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|\.spec\." | head -5)
+
+  if [ -n "$INTEGRITY_VIOLATION" ]; then
+    echo ""
+    echo "❌ [CRITICAL] 평가 무결성 위반 감지!"
+    echo ""
+    echo "   다음 파일에서 정답 정보('isCorrect', 'correctAnswerId')가 발견됐습니다:"
+    echo "$INTEGRITY_VIOLATION" | sed 's/^/   - /'
+    echo ""
+    echo "   총괄평가(SUMMATIVE)에서 정답은 절대 프론트엔드에 노출하면 안 됩니다."
+    echo "   채점은 서버에서만 수행하고, API 응답에 정답 정보를 제거하세요."
+    echo "   참조: CLAUDE.md 규칙 3 — 평가 무결성 / docs/verification-rubric.md 차원 2"
+    echo ""
+    exit 1
+  fi
+  echo "✅ 평가 무결성 통과"
+else
+  echo "⏭️  [4/6] 평가 무결성 건너뜀 (src/ 없음)"
+fi
+
+# ────────────────────────────────────────
+# [UNIVERSAL] 5. 보안: 하드코딩 비밀 정보 검사 — CRITICAL
+#    API 키, 비밀번호, 토큰이 코드에 직접 포함되면 git 이력에 영구 저장
+# ────────────────────────────────────────
+if [ -d "src" ]; then
+  echo ""
+  echo "🔐 [5/6] 보안: 하드코딩 비밀 정보 검사..."
+
+  SECRET_VIOLATION=$(find src -name "*.ts" -o -name "*.tsx" -o -name "*.js" 2>/dev/null \
+    | xargs grep -lnE "(apiKey|api_key|password|secret|token)\s*=\s*['\"][^'\"\$\{]{8,}" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|example\|sample\|placeholder\|mock" | head -5)
+
+  if [ -n "$SECRET_VIOLATION" ]; then
+    echo ""
+    echo "❌ [CRITICAL] 비밀 정보 하드코딩 가능성 감지!"
+    echo ""
+    echo "   다음 파일에 API 키/비밀번호/토큰이 직접 포함된 것 같습니다:"
+    echo "$SECRET_VIOLATION" | sed 's/^/   - /'
+    echo ""
+    echo "   비밀 정보는 반드시 환경 변수(.env)에만 저장하세요:"
+    echo "   const apiKey = process.env.API_KEY  ← 올바른 방법"
+    echo "   참조: CLAUDE.md '비밀 정보' 섹션 / docs/verification-rubric.md 차원 5"
+    echo ""
+    exit 1
+  fi
+  echo "✅ 비밀 정보 보안 통과"
+else
+  echo "⏭️  [5/6] 보안 검사 건너뜀 (src/ 없음)"
+fi
+
+# ────────────────────────────────────────
+# [EDU-DOMAIN] 6. 심리 안전: 부정적 피드백 메시지 검사 — WARNING
+#    학습 의욕을 저하시키는 표현 감지 (커밋 차단 아님, 경고만)
+# ────────────────────────────────────────
+if [ -d "src" ]; then
+  echo ""
+  echo "💬 [6/6] 심리 안전: 피드백 메시지 검사..."
+
+  NEGATIVE_MSG=$(find src -name "*.ts" -o -name "*.tsx" 2>/dev/null \
+    | xargs grep -ln "틀렸습니다\|오답입니다\|실패했습니다\|Wrong answer\|Incorrect answer" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|\.spec\." | head -5)
+
+  if [ -n "$NEGATIVE_MSG" ]; then
+    echo ""
+    echo "⚠️  [WARNING] 부정적 피드백 메시지 발견 (커밋은 진행됩니다)"
+    echo ""
+    echo "   다음 파일에서 학습 의욕을 저하시킬 수 있는 표현이 발견됐습니다:"
+    echo "$NEGATIVE_MSG" | sed 's/^/   - /'
+    echo ""
+    echo "   권장 변경:"
+    echo "   '틀렸습니다'      →  '아직 아니에요. 다시 생각해볼까요?'"
+    echo "   '오답입니다'      →  '이번엔 맞지 않았어요. 힌트를 볼까요?'"
+    echo "   '실패했습니다'    →  '다시 도전해봐요!'"
+    echo ""
+    echo "   [Pedagogy Reviewer] 검토를 권장합니다."
+    echo "   참조: docs/education-principles.md 섹션 4 / docs/verification-rubric.md 차원 3"
+    echo ""
+  else
+    echo "✅ 심리 안전 메시지 통과"
+  fi
+else
+  echo "⏭️  [6/6] 메시지 검사 건너뜀 (src/ 없음)"
+fi
+
+# ────────────────────────────────────────
+# 완료
+# ────────────────────────────────────────
+echo ""
+echo "================================"
+echo "✅ 모든 검증 통과! 커밋을 진행합니다."
+echo "   상세 검증이 필요하다면: [verify 스킬 사용] 기능명을 검증해줘"
+echo ""

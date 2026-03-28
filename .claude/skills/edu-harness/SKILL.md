@@ -1,0 +1,289 @@
+---
+name: edu-harness
+description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확장해 Pedagogy Reviewer, 평가 무결성, 심리 안전, UDL 학습 설계를 추가합니다.
+---
+
+# edu-harness 스킬
+
+> 교육 앱이라면 harness 대신 이 스킬을 사용하세요.
+
+`harness` 스킬의 완전한 상위 호환입니다.
+교육 도메인 전용 단계 3개를 추가로 실행합니다.
+
+---
+
+## 사용 방법
+
+```
+[edu-harness 스킬 사용] [기능 설명]
+
+예:
+[edu-harness 스킬 사용] 학생 퀴즈 응시 기능을 만들어줘. 형성평가로 설계해줘.
+[edu-harness 스킬 사용] 레슨 목록 페이지를 만들어줘.
+[edu-harness 스킬 사용] 교사 성적 관리 화면을 만들어줘.
+```
+
+---
+
+## 실행 흐름
+
+```
+[edu-harness 스킬 사용] 기능 설명
+         │
+┌────────▼────────┐
+│   1. PLAN       │  [Planner] — harness와 동일
+│                 │  + 평가 유형(형성/총괄) 결정 포함
+└────────┬────────┘
+         │ 승인
+┌────────▼────────┐
+│   2. EDU DESIGN │  교육 도메인 설계 체크 ← 신규
+│                 │  평가 유형 / UDL / 스캐폴딩 결정
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│   3. BUILD      │  [Coder] — harness와 동일
+│                 │  + 교육 규칙(CLAUDE.md 규칙 1-5) 준수
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│   4. PEDAGOGY   │  [Pedagogy Reviewer] ← 신규
+│     REVIEW      │  교육학적 적절성 검토
+└────────┬────────┘
+         │
+┌────────▼────────┐
+│   5. VERIFY     │  bash .claude/skills/verify/verify.sh
+│                 │  교육 차원(Dim 2, 3) 포함 검증
+└────────┬────────┘
+         │
+    ┌────▼────┐
+    │APPROVED?│
+    └──┬──┬───┘
+       │  │ REJECTED
+       │  └─► FIX LOOP (execution-loop / objective-loop)
+       │
+┌──────▼──────────┐
+│  6. HARNESS     │  교육 규칙도 하네스에 반영
+│     UPDATE      │
+└──────┬──────────┘
+       │
+┌──────▼──────────┐
+│  7. DONE        │  progress.md 업데이트
+└─────────────────┘
+```
+
+---
+
+## 단계 1 — PLAN (교육 확장)
+
+```
+[Planner] [기능명]을 구현하기 위한 계획을 세워줘.
+progress.md, architecture.md, docs/education-principles.md를 먼저 읽어줘.
+
+이 기능이 평가 관련이라면:
+- 형성평가(FORMATIVE)인지 총괄평가(SUMMATIVE)인지 먼저 결정해줘.
+- 그에 맞는 설계 원칙을 계획에 반영해줘.
+3단계 이상이면 내 승인을 먼저 받아줘.
+```
+
+---
+
+## 단계 2 — EDU DESIGN
+
+구현 전에 교육 도메인 설계를 확인합니다.
+
+### 평가 유형 체크
+
+```
+이 기능에 평가 요소가 있는가?
+├── 없음 → 단계 3으로 바로 이동
+└── 있음 → 평가 유형 결정 필수
+
+  형성평가 (FORMATIVE) 설정:
+    maxAttempts: null       (무제한 재시도)
+    showAnswerAfter: "IMMEDIATELY"
+    timeLimit: null
+    → 재시도 버튼 UI 필수
+
+  총괄평가 (SUMMATIVE) 설정:
+    maxAttempts: 1
+    showAnswerAfter: "NEVER" 또는 "ON_SUBMIT"
+    → API 응답에 isCorrect, correctAnswerId 절대 불포함
+    → 채점은 서버에서만 수행
+```
+
+### 학습 흐름 체크 (레슨/컨텐츠 기능인 경우)
+
+```
+Bloom's Taxonomy 수준은?
+  REMEMBER / UNDERSTAND / APPLY / ANALYZE / EVALUATE / CREATE
+
+UDL 다양한 표현 방식 제공?
+  텍스트 + 시각(이미지/영상) 중 최소 2가지
+
+스캐폴딩 수준 설계?
+  학생 성적에 따라 지원 수준 자동 조정 고려
+```
+
+### 피드백 메시지 사전 검토
+
+```
+❌ 사용 금지           ✅ 권장 표현
+"틀렸습니다"    →    "아직 아니에요. 다시 생각해볼까요?"
+"오답입니다"    →    "이번엔 맞지 않았어요. 힌트를 볼까요?"
+"실패했습니다"  →    "다시 도전해봐요!"
+"N개 남았습니다" →  "벌써 N개 완료했어요!"
+```
+
+### 컴포넌트 접근성 요구사항
+
+```
+QuizCard 유형:
+  <fieldset> + <legend>로 문제 그룹화
+  각 선택지: <input type="radio"> + <label>
+  피드백: aria-live="polite" 영역
+
+ProgressBar:
+  role="progressbar" + aria-valuenow/min/max
+  시각적 막대 + 텍스트 레이블 병기
+
+LessonList:
+  <nav> + <ol> (순서 있는 목록)
+  현재 항목: aria-current="page"
+```
+
+---
+
+## 단계 3 — BUILD (교육 규칙 적용)
+
+```
+[Coder] Planner의 계획에 따라 [기능명]을 구현해줘.
+CLAUDE.md의 모든 규칙을 준수하되, 특히:
+- 규칙 1: 형성/총괄평가 구분 ([형성/총괄] 타입 명시)
+- 규칙 2: 학습 안전 환경 (부정적 메시지 금지)
+- 규칙 3: 평가 무결성 (isCorrect API 응답에 절대 불포함)
+- 규칙 4: 교육 콘텐츠 버저닝
+- 규칙 5: 미성년자 데이터 규정
+
+성적 변경 함수가 있다면 GradeAuditLog.create() 반드시 포함.
+단위 테스트와 jest-axe 접근성 테스트를 함께 작성해줘.
+```
+
+---
+
+## 단계 4 — PEDAGOGY REVIEW
+
+```
+[Pedagogy Reviewer] 방금 구현한 [기능명]을 교육학적 관점에서 검토해줘.
+docs/education-principles.md를 기준으로:
+
+1. 평가 유형이 코드에 올바르게 반영됐는가?
+2. 오답/오류 메시지가 학생을 격려하는가, 위축시키는가?
+3. 형성평가에서 재시도가 허용되는가?
+4. 정답이 프론트엔드에 노출될 수 있는 코드가 있는가?
+5. 진도 표시가 성장 중심 표현인가?
+
+코드는 수정하지 말고 검토 리스트만 작성해줘.
+```
+
+**Pedagogy Reviewer 출력 형식:**
+```
+교육학적 검토: [기능명]
+
+🔴 교육적으로 해로운 요소 (즉시 수정)
+🟡 개선 권장 사항
+🟢 잘 된 점
+
+종합 의견: [한 줄 평가]
+```
+
+🔴 항목이 있으면 단계 3으로 복귀해 수정 후 재검토.
+
+---
+
+## 단계 5 — VERIFY
+
+```bash
+bash .claude/skills/verify/verify.sh
+
+# 출력 예시
+CRITICAL_FAIL=0 HIGH=3/3 MEDIUM=2/2 SCORE=100 VERDICT=APPROVED
+```
+
+교육 특화 추가 점검:
+
+```bash
+# 평가 무결성: API 응답에 isCorrect 포함 여부
+grep -rn "isCorrect\|correctAnswerId" src/ --include="*.ts" \
+  | grep -v "\.test\.\|__tests__"
+
+# 심리 안전: 부정적 메시지 잔류 여부
+grep -rn "틀렸습니다\|오답입니다\|Wrong answer" src/ --include="*.tsx" \
+  | grep -v "\.test\."
+```
+
+---
+
+## 단계 6 — HARNESS UPDATE (교육 규칙 포함)
+
+```
+□ 이번 작업에서 나온 교육 관련 문제 → CLAUDE.md 규칙에 추가
+□ 새로운 피드백 메시지 패턴 발견   → CLAUDE.md 규칙 2에 예시 추가
+□ 평가 설계 결정 사항              → architecture.md에 기록
+□ Pedagogy Reviewer가 지적한 패턴  → docs/education-principles.md에 반영 제안
+```
+
+```bash
+git add CLAUDE.md architecture.md progress.md
+git commit -m "harness-evolve: [발견한 교육 규칙 한 줄 요약]
+
+edu-harness 결과:
+- 구현: [기능명]
+- 평가 유형: [FORMATIVE/SUMMATIVE/해당없음]
+- VERDICT: [판정]
+- 교육 규칙 업데이트: [내용]"
+```
+
+---
+
+## 교육 도메인 핵심 체크리스트
+
+### 평가 무결성 (CRITICAL — 위반 시 커밋 차단)
+
+```
+□ API 응답에 isCorrect 없음
+□ API 응답에 correctAnswerId 없음
+□ 채점 로직이 서버(API route)에만 존재
+□ 총괄평가 maxAttempts === 1
+□ 시드 기반 문항 랜덤화 구현
+□ 성적 변경 시 GradeAuditLog.create() 호출
+```
+
+### 심리 안전
+
+```
+□ "틀렸습니다" 문자열 없음
+□ "오답입니다" 문자열 없음
+□ 진도 표시가 성장 중심 ("N개 완료!" vs "N개 남음")
+□ 형성평가 재시도 버튼 항상 표시
+□ 오답 피드백에 힌트 또는 격려 포함
+```
+
+### UDL 접근성
+
+```
+□ 퀴즈 컴포넌트: fieldset + legend 구조
+□ 피드백: aria-live="polite" 영역 사용
+□ 진도바: role="progressbar" + aria-valuenow
+□ 색상 + 아이콘 + 텍스트 동시 표현 (색상만으로 정보 전달 금지)
+□ 키보드로 모든 기능 이용 가능
+```
+
+---
+
+## 내부 스킬
+
+| 스킬 | 역할 |
+|------|------|
+| execution-loop | 합격까지 반복 |
+| verify (+ verify.sh) | 수치 검증 |
+| objective-loop (+ measure.sh) | 수치 목표 달성 |
