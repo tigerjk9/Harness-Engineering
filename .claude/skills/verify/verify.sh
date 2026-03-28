@@ -11,6 +11,13 @@
 SRC=${1:-src}
 C_FAIL=0; H_PASS=0; H_TOTAL=0; M_PASS=0; M_TOTAL=0
 
+# ── UNIVERSAL 검사 (모든 프로젝트) ──────────────────────────────────
+# Dim 2 isCorrect 노출, Dim 5 비밀, Dim 1 console.log, Dim 4 img alt
+#
+# ── EDU-DOMAIN 검사 (교육 앱만 해당) ────────────────────────────────
+# Dim 3 부정적 메시지, Dim 4b fieldset, Dim 4c aria-live, Dim 4d progressbar
+# 교육 앱이 아니라면: grep으로 관련 파일이 없어 자동 통과됩니다.
+
 # ── Dimension 2: 평가 무결성 (CRITICAL) ──────────────────────────
 # isCorrect 또는 correctAnswerId가 프론트엔드에 노출되면 즉시 실패
 H_TOTAL=$((H_TOTAL + 1))
@@ -58,6 +65,45 @@ CON=$(grep -rln "console\.log" "$SRC" \
   --include="*.ts" --include="*.tsx" 2>/dev/null \
   | grep -v "\.test\.\|__tests__\|\.spec\.")
 [ -z "$CON" ] && M_PASS=$((M_PASS + 1))
+
+# [EDU-DOMAIN] Dim 4b HIGH: quiz 컴포넌트에 fieldset 그룹화 없음
+# edu-harness 요구사항: QuizCard는 <fieldset>+<legend>로 문제 그룹화
+if [ -d "$SRC" ]; then
+  H_TOTAL=$((H_TOTAL+1))
+  QUIZ_FILES=$(grep -rln "Quiz\|quiz\|Question\|question" "$SRC" --include="*.tsx" 2>/dev/null | grep -v "\.test\.")
+  if [ -z "$QUIZ_FILES" ]; then
+    H_PASS=$((H_PASS+1))  # 퀴즈 컴포넌트 없음 — 통과
+  else
+    NO_FIELDSET=$(echo "$QUIZ_FILES" | xargs grep -L "<fieldset" 2>/dev/null | head -3)
+    [ -z "$NO_FIELDSET" ] && H_PASS=$((H_PASS+1))
+  fi
+fi
+
+# [EDU-DOMAIN] Dim 4c HIGH: 피드백 영역에 aria-live 없음
+# edu-harness 요구사항: 오답 피드백은 aria-live="polite" 영역 사용
+if [ -d "$SRC" ]; then
+  H_TOTAL=$((H_TOTAL+1))
+  FEEDBACK_FILES=$(grep -rln "feedback\|Feedback\|피드백" "$SRC" --include="*.tsx" 2>/dev/null | grep -v "\.test\.")
+  if [ -z "$FEEDBACK_FILES" ]; then
+    H_PASS=$((H_PASS+1))  # 피드백 컴포넌트 없음 — 통과
+  else
+    NO_ARIA=$(echo "$FEEDBACK_FILES" | xargs grep -L 'aria-live' 2>/dev/null | head -3)
+    [ -z "$NO_ARIA" ] && H_PASS=$((H_PASS+1))
+  fi
+fi
+
+# [EDU-DOMAIN] Dim 4d MEDIUM: 진도바에 role="progressbar" 없음
+# edu-harness 요구사항: ProgressBar는 role="progressbar" + aria-valuenow
+if [ -d "$SRC" ]; then
+  M_TOTAL=$((M_TOTAL+1))
+  PROGRESS_FILES=$(grep -rln "ProgressBar\|progressbar\|progress-bar\|진도" "$SRC" --include="*.tsx" 2>/dev/null | grep -v "\.test\.")
+  if [ -z "$PROGRESS_FILES" ]; then
+    M_PASS=$((M_PASS+1))  # 진도바 없음 — 통과
+  else
+    NO_PB=$(echo "$PROGRESS_FILES" | xargs grep -L 'role="progressbar"' 2>/dev/null | head -3)
+    [ -z "$NO_PB" ] && M_PASS=$((M_PASS+1))
+  fi
+fi
 
 # 함수 50줄 초과 파일 존재 여부 (휴리스틱: 800줄 초과 파일)
 M_TOTAL=$((M_TOTAL + 1))

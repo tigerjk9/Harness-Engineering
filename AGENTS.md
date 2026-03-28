@@ -199,7 +199,7 @@ WCAG 2.1 AA 접근성 규칙을 준수하고,
 ### 루프 활성화
 
 ```
-[execution-loop 스킬 사용] [기능명]을 구현해줘.
+/execution-loop [기능명]을 구현해줘.
 ```
 
 ### 루프 종료 조건 (`docs/verification-rubric.md` 기준)
@@ -223,8 +223,8 @@ verify 스킬이 APPROVED 또는 CONDITIONAL 판정 → 루프 종료
 
 상세 내용: `.claude/skills/execution-loop/SKILL.md`
 
-> **💡 전체 워크플로우 한 번에 실행하려면:**
-> `[harness 스킬 사용]` (범용) 또는 `[edu-harness 스킬 사용]` (교육 앱)
+> **전체 워크플로우 한 번에 실행하려면:**
+> `/harness` (범용) 또는 `/edu-harness` (교육 앱)
 > 위 Planner → Coder → Reviewer → execution-loop 전 과정을 자동 오케스트레이션합니다.
 
 ---
@@ -242,10 +242,10 @@ execution-loop의 진화형. **코드와 하네스를 동시에 진화**시킵�
 ### 루프 활성화
 
 ```
-[objective-loop 스킬 사용] [수치 목표]
+/objective-loop [수치 목표]
 
-예: [objective-loop 스킬 사용] verify 점수를 REJECTED → APPROVED로 올려줘.
-예: [objective-loop 스킬 사용] Pedagogy Reviewer 🔴 0개 달성해줘.
+예: /objective-loop verify 점수를 REJECTED → APPROVED로 올려줘.
+예: /objective-loop Pedagogy Reviewer 🔴 0개 달성해줘.
 ```
 
 ### execution-loop과의 차이

@@ -34,13 +34,13 @@ objective: 실행(Execute)  →  검증(Verify)  →  하네스 업데이트
 ## 사용 방법
 
 ```
-[objective-loop 스킬 사용] [목표 설명]
+/objective-loop [목표 설명]
 
 예:
-[objective-loop 스킬 사용] verify 점수를 REJECTED → APPROVED로 올려줘.
-[objective-loop 스킬 사용] Pedagogy Reviewer 🔴 0개, 🟡 2개 이하 달성해줘.
-[objective-loop 스킬 사용] 접근성 차원 HIGH 3/5 → 5/5로 올려줘.
-[objective-loop 스킬 사용] LCP를 3.2초 → 2.5초 이하로 낮춰줘.
+/objective-loop verify 점수를 REJECTED → APPROVED로 올려줘.
+/objective-loop Pedagogy Reviewer 🔴 0개, 🟡 2개 이하 달성해줘.
+/objective-loop 접근성 차원 HIGH 3/5 → 5/5로 올려줘.
+/objective-loop LCP를 3.2초 → 2.5초 이하로 낮춰줘.
 ```
 
 ---
@@ -154,10 +154,10 @@ delta = 0이 3회 연속이면 탐색 공간을 전환하세요.
 사이클 N:
 
 1. 탐색 공간에서 개선 시도 선택
-   → [execution-loop 스킬 사용] [이번 시도 내용]
+   → /execution-loop [이번 시도 내용]
 
 2. 점수 측정
-   → [verify 스킬 사용] [대상 기능]
+   → /verify [대상 기능]
 
 3. delta 계산
    이전 점수: [N-1회 결과]
@@ -306,7 +306,7 @@ objective-loop 보고: [목표]
 ### 예시 1 — verify 점수 개선
 
 ```
-[objective-loop 스킬 사용] 퀴즈 응시 기능의 verify 점수를 REJECTED → APPROVED로 올려줘.
+/objective-loop 퀴즈 응시 기능의 verify 점수를 REJECTED → APPROVED로 올려줘.
 ```
 
 루프 1: CRITICAL 2개 발견 → execution-loop으로 수정 → CRITICAL 0개 (delta: +2)
@@ -319,7 +319,7 @@ CLAUDE.md에 "피드백 메시지: 힌트 포함 필수" 규칙 추가
 ### 예시 2 — 교육 효과 지표 개선
 
 ```
-[objective-loop 스킬 사용] Pedagogy Reviewer 결과에서 🔴 0개, 🟡 2개 이하 달성해줘.
+/objective-loop Pedagogy Reviewer 결과에서 🔴 0개, 🟡 2개 이하 달성해줘.
 ```
 
 루프 1: 재시도 버튼 없음(🔴) → 버튼 추가 → 🔴 0개 (delta: +1)

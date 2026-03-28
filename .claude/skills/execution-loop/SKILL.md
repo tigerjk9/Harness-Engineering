@@ -11,8 +11,8 @@ description: 수정→검증→반복의 실행 루프를 관리합니다. 합�
 ## 사용 방법
 
 ```
-[execution-loop 스킬 사용] [기능 설명]을 구현해줘.
-예: [execution-loop 스킬 사용] 학생 퀴즈 응시 기능을 구현해줘.
+/execution-loop [기능 설명]을 구현해줘.
+예: /execution-loop 학생 퀴즈 응시 기능을 구현해줘.
 ```
 
 ---
@@ -76,7 +76,7 @@ npm test              # 차원 1: 테스트
 
 ### B. verify 스킬 실행 (6개 차원 전체)
 ```
-[verify 스킬 사용] [기능명]을 검증해줘.
+/verify [기능명]을 검증해줘.
 ```
 
 결과: APPROVED / CONDITIONAL / REJECTED 판정 + 차원별 상세 보고
@@ -120,7 +120,7 @@ CONDITIONAL 판정 (MEDIUM 미통과) → 기술 부채 등록 후 진행 가능
 → 사용자에게 방향 결정 요청
 → 루프 일시 중단
 
-재개 명령: "[execution-loop 스킬 사용] 이전 루프를 이어서 계속해줘."
+재개 명령: "/execution-loop 이전 루프를 이어서 계속해줘."
 ```
 
 ---
@@ -152,8 +152,8 @@ progress.md 업데이트 완료: [날짜]
 ### 퀴즈 응시 기능 구현
 
 ```
-[execution-loop 스킬 사용] 학생 퀴즈 응시 기능을 구현해줘.
-assessment-design 스킬을 참조해서 형성평가로 설계해줘.
+/execution-loop 학생 퀴즈 응시 기능을 구현해줘.
+형성평가로 설계해줘.
 합격 기준: 린트 통과, 테스트 통과, Pedagogy Reviewer 승인.
 ```
 

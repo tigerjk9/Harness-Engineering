@@ -78,7 +78,7 @@ CLAUDE.md의 [대괄호] 항목들을 채워줘.
 
 **Claude Code에 입력:**
 ```
-[verify 스킬 사용] CLAUDE.md와 architecture.md를 읽고
+/verify CLAUDE.md와 architecture.md를 읽고
 서로 모순되는 내용이 있는지 확인해줘.
 또한 교육 도메인 규칙이 누락된 부분도 알려줘.
 ```
@@ -165,7 +165,7 @@ bash .claude/skills/objective-loop/measure.sh baseline "퀴즈 응시 기능 개
 
 **edu-harness 실행:**
 ```
-[edu-harness 스킬 사용] 학생 퀴즈 응시 기능을 만들어줘.
+/edu-harness 학생 퀴즈 응시 기능을 만들어줘.
 형성평가로 설계하고, 오답 즉시 피드백과 재시도 버튼을 포함해줘.
 완료 후 progress.md를 업데이트해줘.
 ```
@@ -200,7 +200,7 @@ bash .claude/skills/objective-loop/measure.sh check "루프 1: 기본 구현 완
 
 **루프 2 (MEDIUM 미통과 항목 수정):**
 ```
-[execution-loop 스킬 사용] verify CONDITIONAL 항목을 수정해줘.
+/execution-loop verify CONDITIONAL 항목을 수정해줘.
 APPROVED가 될 때까지 반복해줘.
 ```
 

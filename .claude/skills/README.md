@@ -1,6 +1,6 @@
 # EduHarness 스킬 카탈로그
 
-Claude Code에서 `[스킬명 스킬 사용] ...` 형태로 호출합니다.
+Claude Code에서 `/스킬명 ...` 형태로 호출합니다.
 
 ---
 
@@ -8,8 +8,8 @@ Claude Code에서 `[스킬명 스킬 사용] ...` 형태로 호출합니다.
 
 | 스킬 | 대상 | 명령어 |
 |------|------|--------|
-| **harness** | 모든 프로젝트 (범용) | `[harness 스킬 사용] 기능명을 만들어줘.` |
-| **edu-harness** | 교육 앱 전용 | `[edu-harness 스킬 사용] 기능명을 만들어줘.` |
+| **harness** | 모든 프로젝트 (범용) | `/harness 기능명을 만들어줘.` |
+| **edu-harness** | 교육 앱 전용 | `/edu-harness 기능명을 만들어줘.` |
 
 ---
 
@@ -17,9 +17,9 @@ Claude Code에서 `[스킬명 스킬 사용] ...` 형태로 호출합니다.
 
 | 스킬 | 용도 | 명령어 |
 |------|------|--------|
-| **execution-loop** | 합격 기준까지 수정→검증→반복 | `[execution-loop 스킬 사용] ...` |
+| **execution-loop** | 합격 기준까지 수정→검증→반복 | `/execution-loop ...` |
 | **verify** | 6차원 수치 검증 | `bash .claude/skills/verify/verify.sh` |
-| **objective-loop** | 수치 목표 달성 + 하네스 진화 | `[objective-loop 스킬 사용] ...` |
+| **objective-loop** | 수치 목표 달성 + 하네스 진화 | `/objective-loop ...` |
 
 ---
 

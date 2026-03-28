@@ -69,6 +69,10 @@ temp/
 # Prisma (생성된 클라이언트)
 # prisma/generated/   ← 필요에 따라 주석 해제
 
+# objective-loop 측정 파일 (팀원마다 달라지므로 커밋 불필요)
+.objective-baseline
+objective-loop-log.md
+
 # ────────────────────────────────────────
 # 주의: 다음은 절대 .gitignore에 추가하지 말 것
 # - CLAUDE.md (AI 하네스 핵심 파일)

@@ -5,9 +5,9 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
 
 # edu-harness 스킬
 
-> 교육 앱이라면 harness 대신 이 스킬을 사용하세요.
+> 교육 앱이라면 `/harness` 대신 이 스킬을 사용하세요.
 
-`harness` 스킬의 완전한 상위 호환입니다.
+`/harness` 스킬의 완전한 상위 호환입니다.
 교육 도메인 전용 단계 3개를 추가로 실행합니다.
 
 ---
@@ -15,12 +15,12 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
 ## 사용 방법
 
 ```
-[edu-harness 스킬 사용] [기능 설명]
+/edu-harness [기능 설명]
 
 예:
-[edu-harness 스킬 사용] 학생 퀴즈 응시 기능을 만들어줘. 형성평가로 설계해줘.
-[edu-harness 스킬 사용] 레슨 목록 페이지를 만들어줘.
-[edu-harness 스킬 사용] 교사 성적 관리 화면을 만들어줘.
+/edu-harness 학생 퀴즈 응시 기능을 만들어줘. 형성평가로 설계해줘.
+/edu-harness 레슨 목록 페이지를 만들어줘.
+/edu-harness 교사 성적 관리 화면을 만들어줘.
 ```
 
 ---
@@ -28,7 +28,7 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
 ## 실행 흐름
 
 ```
-[edu-harness 스킬 사용] 기능 설명
+/edu-harness [기능 설명]
          │
 ┌────────▼────────┐
 │   1. PLAN       │  [Planner] — harness와 동일
@@ -51,7 +51,7 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
 └────────┬────────┘
          │
 ┌────────▼────────┐
-│   5. VERIFY     │  bash .claude/skills/verify/verify.sh
+│   5. VERIFY     │  /verify (+ verify.sh)
 │                 │  교육 차원(Dim 2, 3) 포함 검증
 └────────┬────────┘
          │
@@ -59,10 +59,10 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
     │APPROVED?│
     └──┬──┬───┘
        │  │ REJECTED
-       │  └─► FIX LOOP (execution-loop / objective-loop)
+       │  └─► FIX LOOP (/execution-loop / /objective-loop)
        │
 ┌──────▼──────────┐
-│  6. HARNESS     │  교육 규칙도 하네스에 반영
+│  6. HARNESS     │  교육 규칙도 하네스에 반영 (자동 실행)
 │     UPDATE      │
 └──────┬──────────┘
        │
@@ -73,7 +73,89 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
 
 ---
 
-## 단계 1 — PLAN (교육 확장)
+## 단계 1 — PLAN
+
+progress.md, architecture.md, docs/education-principles.md를 먼저 읽은 후 계획을 세운다.
+평가 관련 기능이면 형성/총괄 유형을 계획에 명시한다. 3단계 이상이면 사용자 승인 필수.
+
+상세 기준: 이 파일 하단 [단계 1 참조] 섹션
+
+---
+
+## 단계 2 — EDU DESIGN
+
+평가 요소가 있으면 유형(FORMATIVE/SUMMATIVE)을 결정하고 설정값을 확정한다.
+학습 흐름(Bloom's, UDL, 스캐폴딩)과 피드백 메시지 초안을 검토한다.
+
+상세 기준: 이 파일 하단 [단계 2 참조] 섹션
+
+---
+
+## 단계 3 — BUILD
+
+CLAUDE.md 규칙 1-5를 준수해 구현한다.
+단위 테스트와 jest-axe 접근성 테스트를 함께 작성한다.
+
+상세 기준: 이 파일 하단 [단계 3 참조] 섹션
+
+---
+
+## 단계 4 — PEDAGOGY REVIEW
+
+[Pedagogy Reviewer] 역할로 교육학적 관점에서 검토한다.
+코드 수정 없이 검토 리스트만 작성한다. 🔴 항목이 있으면 단계 3으로 복귀.
+
+상세 기준: 이 파일 하단 [단계 4 참조] 섹션
+
+---
+
+## 단계 5 — VERIFY
+
+```bash
+bash .claude/skills/verify/verify.sh
+```
+
+/verify 스킬 또는 verify.sh로 검증한다. VERDICT=APPROVED이면 다음 단계 진행.
+REJECTED이면 `/execution-loop` 또는 `/objective-loop`으로 재시도.
+
+상세 기준: 이 파일 하단 [단계 5 참조] 섹션
+
+---
+
+## 단계 6 — HARNESS UPDATE (자동 실행 필수)
+
+**이 단계를 건너뛰면 하네스가 진화하지 않습니다.**
+
+### 즉시 실행 (사용자 승인 불필요)
+
+Pedagogy Reviewer나 구현 중 발견한 교육 패턴이 있으면:
+
+1. **CLAUDE.md를 직접 편집** — 교육 도메인 섹션의 해당 규칙에 추가
+2. **HARNESS_CHANGELOG.md에 기록**
+   ```
+   | YYYY-MM-DD | CLAUDE.md | [추가 규칙] | edu-harness 결과: [기능명] |
+   ```
+3. **git commit** `harness-evolve: [교육 규칙 요약]`
+
+### rubric 변경이 필요하다면 (사람 승인 필요)
+
+verify.sh 항목 추가/수정은 반드시 사용자에게 제안 → 승인 후 반영.
+
+---
+
+## 내부 스킬
+
+| 스킬 | 역할 |
+|------|------|
+| `/execution-loop` | 합격까지 반복 |
+| `/verify` (+ verify.sh) | 수치 검증 |
+| `/objective-loop` (+ measure.sh) | 수치 목표 달성 |
+
+---
+
+---
+
+## 참조 — 단계 1 상세 기준
 
 ```
 [Planner] [기능명]을 구현하기 위한 계획을 세워줘.
@@ -87,9 +169,7 @@ progress.md, architecture.md, docs/education-principles.md를 먼저 읽어줘.
 
 ---
 
-## 단계 2 — EDU DESIGN
-
-구현 전에 교육 도메인 설계를 확인합니다.
+## 참조 — 단계 2 상세 기준
 
 ### 평가 유형 체크
 
@@ -153,7 +233,7 @@ LessonList:
 
 ---
 
-## 단계 3 — BUILD (교육 규칙 적용)
+## 참조 — 단계 3 상세 기준
 
 ```
 [Coder] Planner의 계획에 따라 [기능명]을 구현해줘.
@@ -168,9 +248,40 @@ CLAUDE.md의 모든 규칙을 준수하되, 특히:
 단위 테스트와 jest-axe 접근성 테스트를 함께 작성해줘.
 ```
 
+### 평가 무결성 체크리스트 (CRITICAL — 위반 시 커밋 차단)
+
+```
+□ API 응답에 isCorrect 없음
+□ API 응답에 correctAnswerId 없음
+□ 채점 로직이 서버(API route)에만 존재
+□ 총괄평가 maxAttempts === 1
+□ 시드 기반 문항 랜덤화 구현
+□ 성적 변경 시 GradeAuditLog.create() 호출
+```
+
+### 심리 안전 체크리스트
+
+```
+□ "틀렸습니다" 문자열 없음
+□ "오답입니다" 문자열 없음
+□ 진도 표시가 성장 중심 ("N개 완료!" vs "N개 남음")
+□ 형성평가 재시도 버튼 항상 표시
+□ 오답 피드백에 힌트 또는 격려 포함
+```
+
+### UDL 접근성 체크리스트
+
+```
+□ 퀴즈 컴포넌트: fieldset + legend 구조
+□ 피드백: aria-live="polite" 영역 사용
+□ 진도바: role="progressbar" + aria-valuenow
+□ 색상 + 아이콘 + 텍스트 동시 표현 (색상만으로 정보 전달 금지)
+□ 키보드로 모든 기능 이용 가능
+```
+
 ---
 
-## 단계 4 — PEDAGOGY REVIEW
+## 참조 — 단계 4 상세 기준
 
 ```
 [Pedagogy Reviewer] 방금 구현한 [기능명]을 교육학적 관점에서 검토해줘.
@@ -186,6 +297,7 @@ docs/education-principles.md를 기준으로:
 ```
 
 **Pedagogy Reviewer 출력 형식:**
+
 ```
 교육학적 검토: [기능명]
 
@@ -196,11 +308,9 @@ docs/education-principles.md를 기준으로:
 종합 의견: [한 줄 평가]
 ```
 
-🔴 항목이 있으면 단계 3으로 복귀해 수정 후 재검토.
-
 ---
 
-## 단계 5 — VERIFY
+## 참조 — 단계 5 상세 기준
 
 ```bash
 bash .claude/skills/verify/verify.sh
@@ -220,70 +330,3 @@ grep -rn "isCorrect\|correctAnswerId" src/ --include="*.ts" \
 grep -rn "틀렸습니다\|오답입니다\|Wrong answer" src/ --include="*.tsx" \
   | grep -v "\.test\."
 ```
-
----
-
-## 단계 6 — HARNESS UPDATE (교육 규칙 포함)
-
-```
-□ 이번 작업에서 나온 교육 관련 문제 → CLAUDE.md 규칙에 추가
-□ 새로운 피드백 메시지 패턴 발견   → CLAUDE.md 규칙 2에 예시 추가
-□ 평가 설계 결정 사항              → architecture.md에 기록
-□ Pedagogy Reviewer가 지적한 패턴  → docs/education-principles.md에 반영 제안
-```
-
-```bash
-git add CLAUDE.md architecture.md progress.md
-git commit -m "harness-evolve: [발견한 교육 규칙 한 줄 요약]
-
-edu-harness 결과:
-- 구현: [기능명]
-- 평가 유형: [FORMATIVE/SUMMATIVE/해당없음]
-- VERDICT: [판정]
-- 교육 규칙 업데이트: [내용]"
-```
-
----
-
-## 교육 도메인 핵심 체크리스트
-
-### 평가 무결성 (CRITICAL — 위반 시 커밋 차단)
-
-```
-□ API 응답에 isCorrect 없음
-□ API 응답에 correctAnswerId 없음
-□ 채점 로직이 서버(API route)에만 존재
-□ 총괄평가 maxAttempts === 1
-□ 시드 기반 문항 랜덤화 구현
-□ 성적 변경 시 GradeAuditLog.create() 호출
-```
-
-### 심리 안전
-
-```
-□ "틀렸습니다" 문자열 없음
-□ "오답입니다" 문자열 없음
-□ 진도 표시가 성장 중심 ("N개 완료!" vs "N개 남음")
-□ 형성평가 재시도 버튼 항상 표시
-□ 오답 피드백에 힌트 또는 격려 포함
-```
-
-### UDL 접근성
-
-```
-□ 퀴즈 컴포넌트: fieldset + legend 구조
-□ 피드백: aria-live="polite" 영역 사용
-□ 진도바: role="progressbar" + aria-valuenow
-□ 색상 + 아이콘 + 텍스트 동시 표현 (색상만으로 정보 전달 금지)
-□ 키보드로 모든 기능 이용 가능
-```
-
----
-
-## 내부 스킬
-
-| 스킬 | 역할 |
-|------|------|
-| execution-loop | 합격까지 반복 |
-| verify (+ verify.sh) | 수치 검증 |
-| objective-loop (+ measure.sh) | 수치 목표 달성 |

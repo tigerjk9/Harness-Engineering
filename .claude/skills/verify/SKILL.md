@@ -11,9 +11,9 @@ description: 구현된 기능을 6개 차원(기술/평가 무결성/심리 안�
 ## 사용 방법
 
 ```
-[verify 스킬 사용] [기능명 또는 파일명]을 검증해줘.
-예: [verify 스킬 사용] 퀴즈 응시 기능을 검증해줘.
-예: [verify 스킬 사용] src/app/quiz/[id]/page.tsx를 검증해줘.
+/verify [기능명 또는 파일명]을 검증해줘.
+예: /verify 퀴즈 응시 기능을 검증해줘.
+예: /verify src/app/quiz/[id]/page.tsx를 검증해줘.
 ```
 
 ---

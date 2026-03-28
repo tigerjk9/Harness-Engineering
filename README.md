@@ -150,7 +150,7 @@ architecture.md를 먼저 읽고 기존 구조에 맞게 계획해.
 3단계 이상이면 내 승인을 먼저 받아줘.
 
 # 실행 루프 시작
-[execution-loop 스킬 사용] 위 계획대로 퀴즈 응시 기능을 구현해줘.
+/execution-loop 위 계획대로 퀴즈 응시 기능을 구현해줘.
 모든 검증이 통과할 때까지 수정→검증→반복 루프를 돌려줘.
 ```
 
@@ -158,14 +158,14 @@ architecture.md를 먼저 읽고 기존 구조에 맞게 계획해.
 
 ```
 # 교육 앱: 한 명령으로 계획→구현→검증→하네스 업데이트 전체 실행
-[edu-harness 스킬 사용] 학생 퀴즈 응시 기능을 만들어줘. 형성평가로 설계해줘.
+/edu-harness 학생 퀴즈 응시 기능을 만들어줘. 형성평가로 설계해줘.
 
 # 범용 앱: 동일한 워크플로우, 교육 도메인 검사 제외
-[harness 스킬 사용] 사용자 로그인 기능을 만들어줘.
+/harness 사용자 로그인 기능을 만들어줘.
 
 # 수치 목표 달성 + 하네스 자체 진화
-[objective-loop 스킬 사용] verify 점수를 REJECTED → APPROVED로 올려줘.
-[objective-loop 스킬 사용] Pedagogy Reviewer 🔴 0개, 🟡 2개 이하 달성해줘.
+/objective-loop verify 점수를 REJECTED → APPROVED로 올려줘.
+/objective-loop Pedagogy Reviewer 🔴 0개, 🟡 2개 이하 달성해줘.
 
 # 현재 점수 측정
 bash .claude/skills/verify/verify.sh
