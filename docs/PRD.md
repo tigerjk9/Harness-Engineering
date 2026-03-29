@@ -1,7 +1,7 @@
 # EduHarness Foundation — PRD (Product Requirements Document)
 
 > 마지막 업데이트: 2026-03-29
-> 버전: v2.0 (원문 프레임워크 정렬 완료)
+> 버전: v3.1 (MD 파일 구조화 + GitHub 배포 완료)
 
 ---
 
@@ -206,6 +206,31 @@
 
 ---
 
+### v3.1 (2026-03-29) — MD 파일 구조화 + GitHub 배포
+
+**배경:** 헌법 파일(CLAUDE.md, AGENTS.md)이 AI가 매 작업마다 읽기에 불필요한 노이즈 포함. README.md도 철학적 서술 비중 과다.
+
+**핵심 변경:**
+
+| 파일 | 이전 | 이후 | 감소 |
+|------|------|------|------|
+| `CLAUDE.md` | 201줄 | 129줄 | -36% |
+| `AGENTS.md` | 279줄 | 130줄 | -53% |
+| `README.md` | 233줄 | 123줄 | -47% |
+
+**제거 항목 (AI 성능에 영향 없음):**
+- CLAUDE.md: 코딩 규칙 코드 예시 블록, 교육 규칙 서술 단락
+- AGENTS.md: 역할별 활성화 예시 코드블록, 실행 루프·Objective Loop 설명 (SKILL.md와 완전 중복)
+- README.md: 철학적 서술 단락, 중복 예시
+
+**유지 항목:** 모든 실질 규칙, 출력 형식, 제약사항, 워크플로우 다이어그램
+
+**추가:**
+- `.gitignore`: `.bkit/`, `docs/.pdca-status.json`, `docs/.pdca-snapshots/`, `.claude/settings.local.json` 제외 (플러그인 자동 생성 파일)
+- GitHub 배포: `tigerjk9/Harness-Engineering` 커밋+푸쉬 완료
+
+---
+
 ## 6. 기술적 결정 사항
 
 | 날짜 | 결정 | 이유 |
@@ -218,6 +243,8 @@
 | 2026-03-29 | 8스킬 → 5스킬 재편 | 사용자는 2개만 기억; 나머지는 내부 오케스트레이션 |
 | 2026-03-29 | verify.sh + measure.sh bash 스크립트 | AI 해석 비결정론 제거 — 같은 코드 = 같은 점수 |
 | 2026-03-29 | objective-loop = 탐색 문제 + Goodhart's Law 방어 | rubric이 목표가 되는 순간의 퇴화 방지; rubric 변경은 사람 승인 필수 |
+| 2026-03-29 | 헌법 파일 경량화 — 코드 예시·서술 단락 제거 | AI가 매 작업마다 읽는 파일은 규칙만; 예시는 교육 효과 없이 컨텍스트만 소비 |
+| 2026-03-29 | AGENTS.md에서 스킬 중복 섹션 제거 | 실행 루프·Objective Loop 설명은 SKILL.md가 단일 진실 소스; AGENTS.md는 역할 정의만 담당 |
 
 ---
 
@@ -225,9 +252,9 @@
 
 ### 즉시 필요
 
-- [ ] GitHub 원격 리포지토리 생성
-- [ ] Template Repository 설정 ("Use this template" 버튼 활성화)
-- [ ] README의 `[YOUR_GITHUB]` URL 업데이트
+- [x] GitHub 원격 리포지토리 생성 (`tigerjk9/Harness-Engineering`)
+- [ ] Template Repository 설정 — GitHub 웹 Settings에서 직접 체크 필요
+- [x] 커밋 + 푸쉬 완료
 
 ### 추후 고려
 
