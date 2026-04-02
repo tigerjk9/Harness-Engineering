@@ -12,6 +12,18 @@ description: 교육 앱 전용 하네스 워크플로우. harness 스킬을 확�
 
 ---
 
+## 단계 0 — SYSTEM CHECK (자동, 매 실행 시)
+
+```bash
+bash .claude/hooks/system-check.sh
+```
+
+FAIL 항목이 있으면 해결 후 진행. WARN 항목은 계속 가능.
+edu-harness는 verify --full (lint+tsc+test+grep)을 실행하므로
+Node, tsconfig.json, lint/test 스크립트가 올바르게 설정돼 있어야 합니다.
+
+---
+
 ## 사용 방법
 
 ```

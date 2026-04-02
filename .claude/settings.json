@@ -6,7 +6,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo '💡 EduHarness: 작업 완료 후 progress.md를 업데이트하셨나요?'"
+            "command": "RESULT=$(bash .claude/skills/verify/verify.sh 2>/dev/null | tail -1); echo \"  🔍 harness: $RESULT\""
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; echo '  💡 세션 시작: progress.md를 먼저 읽어보세요'"
           }
         ]
       }

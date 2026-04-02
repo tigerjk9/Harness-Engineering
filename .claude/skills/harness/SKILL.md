@@ -13,6 +13,18 @@ description: 범용 하네스 워크플로우. 한 명령으로 계획→구현�
 
 ---
 
+## 단계 0 — SYSTEM CHECK (자동, 매 실행 시)
+
+```bash
+bash .claude/hooks/system-check.sh
+```
+
+FAIL 항목이 있으면 해결 후 진행. WARN 항목은 계속 가능.
+system-check.sh는 Node/npm, tsconfig.json, lint/test 스크립트, git hooks 등
+verify --full이 올바르게 작동하는 데 필요한 환경을 사전 검증합니다.
+
+---
+
 ## 사용 방법
 
 ```

@@ -1,14 +1,29 @@
 #!/usr/bin/env bash
-# EduHarness verify.sh — 6차원 검증 실행 및 점수 출력
-# 사용법: bash .claude/skills/verify/verify.sh [src_path]
+# EduHarness verify.sh v2 — 6차원 검증 실행 및 점수 출력
+#
+# 사용법:
+#   bash verify.sh [--full] [src_path]
+#   --full: lint + tsc + test 실제 실행 (느림, pre-commit · /harness 전용)
+#   기본값: grep 전용 quick 모드 (빠름, settings.json hook 전용)
+#
 # 출력:   CRITICAL_FAIL=N HIGH=N/N MEDIUM=N/N SCORE=N VERDICT=X
 #
 # VERDICT 기준:
-#   APPROVED   → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM ≥80%
+#   APPROVED    → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM ≥80%
 #   CONDITIONAL → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM <80%
-#   REJECTED   → CRITICAL_FAIL>0 OR HIGH <100%
+#   REJECTED    → CRITICAL_FAIL>0 OR HIGH <100%
 
-SRC=${1:-src}
+# ── 모드 및 경로 파싱 ─────────────────────────────────────────────
+MODE="quick"
+SRC="src"
+for _arg in "$@"; do
+  case "$_arg" in
+    --full)       MODE="full" ;;
+    --check-only) echo "VERDICT=OK" && exit 0 ;;  # system-check.sh용: 실행 가능 여부만 확인
+    --*)          ;;
+    *)            SRC="$_arg" ;;
+  esac
+done
 C_FAIL=0; H_PASS=0; H_TOTAL=0; M_PASS=0; M_TOTAL=0
 
 # ── UNIVERSAL 검사 (모든 프로젝트) ──────────────────────────────────
@@ -36,7 +51,7 @@ fi
 # 부정적 피드백 메시지 금지
 H_TOTAL=$((H_TOTAL + 1))
 NEG=$(grep -rln \
-  "틀렸습니다\|오답입니다\|실패했습니다\|Wrong answer\|Incorrect answer" \
+  "틀렸습니다\|오답입니다\|실패했습니다\|틀린 것 같\|맞지 않았\|정답이 아니\|Wrong answer\|Incorrect answer\|You failed\|That.s wrong" \
   "$SRC" --include="*.ts" --include="*.tsx" 2>/dev/null \
   | grep -v "\.test\.\|__tests__\|\.spec\.")
 [ -z "$NEG" ] && H_PASS=$((H_PASS + 1))
@@ -110,6 +125,29 @@ M_TOTAL=$((M_TOTAL + 1))
 LONG=$(find "$SRC" \( -name "*.ts" -o -name "*.tsx" \) 2>/dev/null \
   | xargs wc -l 2>/dev/null | awk '$1 > 800 {print $2}' | grep -v "total")
 [ -z "$LONG" ] && M_PASS=$((M_PASS + 1))
+
+# ── [FULL MODE] 차원 1: 실제 린트·타입·테스트 실행 ─────────────────
+# quick 모드에서는 건너뜀 (grep 전용). --full 플래그 시에만 실행.
+if [ "$MODE" = "full" ]; then
+  # ESLint (HIGH) — package.json에 lint 스크립트 있을 때
+  if [ -f "package.json" ] && grep -q '"lint"' package.json 2>/dev/null; then
+    H_TOTAL=$((H_TOTAL + 1))
+    npm run lint --silent 2>/dev/null
+    [ $? -eq 0 ] && H_PASS=$((H_PASS + 1))
+  fi
+  # TypeScript noEmit (HIGH) — tsconfig.json 있을 때
+  if [ -f "tsconfig.json" ] && command -v npx &>/dev/null; then
+    H_TOTAL=$((H_TOTAL + 1))
+    npx --no-install tsc --noEmit 2>/dev/null
+    [ $? -eq 0 ] && H_PASS=$((H_PASS + 1))
+  fi
+  # Tests (HIGH) — test 스크립트 있을 때
+  if [ -f "package.json" ] && grep -q '"test"' package.json 2>/dev/null; then
+    H_TOTAL=$((H_TOTAL + 1))
+    npm test -- --passWithNoTests --silent 2>/dev/null
+    [ $? -eq 0 ] && H_PASS=$((H_PASS + 1))
+  fi
+fi
 
 # ── 점수 계산 ─────────────────────────────────────────────────────
 # CRITICAL 20점 + HIGH 50점 + MEDIUM 30점
