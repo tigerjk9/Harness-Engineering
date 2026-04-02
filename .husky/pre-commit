@@ -176,7 +176,7 @@ fi
 # ────────────────────────────────────────
 if [ -f "package.json" ] && [ -f "tsconfig.json" ]; then
   echo ""
-  echo "📊 [7/7] EduHarness verify (full mode)..."
+  echo "📊 [7/9] EduHarness verify (full mode)..."
   VERIFY_RESULT=$(bash .claude/skills/verify/verify.sh --full 2>/dev/null | tail -1)
   VERDICT=$(echo "$VERIFY_RESULT" | grep -oE 'VERDICT=[A-Z]+' | cut -d= -f2)
   echo "  결과: $VERIFY_RESULT"
@@ -189,11 +189,29 @@ if [ -f "package.json" ] && [ -f "tsconfig.json" ]; then
   fi
   [ "$VERDICT" = "CONDITIONAL" ] && echo "  ⚠️  CONDITIONAL — 기술 부채 등록 후 진행 (커밋 허용)"
 else
-  echo "⏭️  [7/7] verify --full 건너뜀 (package.json 또는 tsconfig.json 없음)"
+  echo "⏭️  [7/9] verify --full 건너뜀 (package.json 또는 tsconfig.json 없음)"
 fi
 
 # ────────────────────────────────────────
-# [NEW] 8. HARNESS_CHANGELOG 자동 업데이트
+# [UNIVERSAL] 8. 파일 크기 검사 — 800줄 초과 경고
+#    과도하게 큰 파일은 가독성·유지보수성 저하
+# ────────────────────────────────────────
+if [ -d "src" ]; then
+  LARGE_FILES=$(find src -name "*.ts" -o -name "*.tsx" 2>/dev/null \
+    | xargs wc -l 2>/dev/null | awk '$1 > 800 {print $2}' | grep -v "total" | head -3)
+  if [ -n "$LARGE_FILES" ]; then
+    echo ""
+    echo "⚠️  [MEDIUM] 800줄 초과 파일 발견 (분리를 권장합니다):"
+    echo "$LARGE_FILES" | sed 's/^/   - /'
+    echo ""
+    echo "   하나의 파일이 너무 크면 유지보수가 어렵습니다."
+    echo "   기능별로 파일을 분리하는 것을 권장합니다. (커밋 차단은 아님)"
+    echo ""
+  fi
+fi
+
+# ────────────────────────────────────────
+# [NEW] 9. HARNESS_CHANGELOG 자동 업데이트
 # ────────────────────────────────────────
 if git diff --cached --name-only 2>/dev/null | grep -q "CLAUDE\.md$"; then
   echo ""

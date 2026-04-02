@@ -1,6 +1,6 @@
 ---
 name: objective-loop
-description: 목표를 수치 평가 함수로 변환하고, 기준 달성까지 자율 반복합니다. 코드와 하네스를 동시에 진화시키며, Goodhart's Law 방어와 루브릭 자체 진화를 내장합니다.
+description: verify 점수를 올리거나 수치 목표 달성이 필요할 때 반드시 이 스킬을 사용할 것. 'REJECTED를 APPROVED로', 'Pedagogy Reviewer 🔴 0개', 'SCORE 80 이상' 등 수치 목표가 있으면 이 스킬. 코드와 하네스(rubric)를 동시에 진화시키며 Goodhart's Law 방어 내장.
 ---
 
 # objective-loop 스킬
@@ -250,6 +250,23 @@ delta = 0이 3회 연속 → 탐색 공간 확장 시도:
 ```
 
 **처리 방법**: 변화 발견 → rubric 수정 제안 작성 → 사용자 승인 후 반영 → `harness-evolve: model stress-test` 커밋
+
+### With/Without 효과 측정 (revfactory 패턴)
+
+하네스가 실제로 품질 차이를 만드는지 측정한다.
+
+```bash
+# edu-harness 사용 전 기준점 (새 기능 구현 전)
+bash .claude/skills/objective-loop/measure.sh baseline "edu-harness 적용 전"
+
+# edu-harness로 구현 완료 후
+bash .claude/skills/objective-loop/measure.sh check "edu-harness 적용 후"
+
+# 결과 예시:
+# 현재: SCORE=87 | 기준점: 20 | delta: +67 | VERDICT=CONDITIONAL
+```
+
+delta가 크면 하네스 효과가 입증된 것. HARNESS_CHANGELOG.md에 기록하라.
 
 ---
 

@@ -120,6 +120,33 @@ if [ -d "$SRC" ]; then
   fi
 fi
 
+# [EDU-DOMAIN] Dim 2b HIGH: quiz.type 필드 누락 (형성/총괄 구분 강제)
+# 퀴즈 파일에 FORMATIVE/SUMMATIVE 타입이 명시되지 않으면 평가 혼용 위험
+if [ -d "$SRC" ]; then
+  H_TOTAL=$((H_TOTAL+1))
+  QUIZ_TYPE_FILES=$(grep -rln "quiz\|Quiz\|question\|Question" "$SRC" --include="*.ts" 2>/dev/null | grep -v "\.test\.\|__tests__")
+  if [ -z "$QUIZ_TYPE_FILES" ]; then
+    H_PASS=$((H_PASS+1))  # 퀴즈 관련 파일 없음 — 통과
+  else
+    HAS_TYPE=$(echo "$QUIZ_TYPE_FILES" | xargs grep -l "FORMATIVE\|SUMMATIVE" 2>/dev/null)
+    [ -n "$HAS_TYPE" ] && H_PASS=$((H_PASS+1))
+  fi
+fi
+
+# [EDU-DOMAIN] Dim 2c MEDIUM: GradeAuditLog 호출 누락 (성적 변경 추적)
+# 성적 변경 함수가 있는데 GradeAuditLog.create() 가 없으면 감사 추적 불가
+if [ -d "$SRC" ]; then
+  M_TOTAL=$((M_TOTAL+1))
+  GRADE_CHANGE=$(grep -rln "updateGrade\|gradeUpdate\|setScore\|updateScore\|성적.*변경\|grade.*update" \
+    "$SRC" --include="*.ts" 2>/dev/null | grep -v "\.test\.\|__tests__")
+  if [ -z "$GRADE_CHANGE" ]; then
+    M_PASS=$((M_PASS+1))  # 성적 변경 함수 없음 — 통과
+  else
+    HAS_AUDIT=$(echo "$GRADE_CHANGE" | xargs grep -l "GradeAuditLog\|gradeAuditLog" 2>/dev/null)
+    [ -n "$HAS_AUDIT" ] && M_PASS=$((M_PASS+1))
+  fi
+fi
+
 # 함수 50줄 초과 파일 존재 여부 (휴리스틱: 800줄 초과 파일)
 M_TOTAL=$((M_TOTAL + 1))
 LONG=$(find "$SRC" \( -name "*.ts" -o -name "*.tsx" \) 2>/dev/null \

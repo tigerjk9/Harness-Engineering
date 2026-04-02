@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; echo '  💡 세션 시작: progress.md를 먼저 읽어보세요'"
+            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; LOOP=$(cat .execution-loop-state 2>/dev/null || echo '없음'); echo \"  💡 세션 시작: progress.md → architecture.md 순으로 읽은 후 시작하세요\"; echo \"  📍 현재 루프 상태: $LOOP\""
           }
         ]
       }

@@ -85,6 +85,21 @@
 
 **반드시 읽어야 할 파일**: `docs/education-principles.md`
 
+**양쪽 동시 읽기 (필수 — revfactory QA 원칙)**
+
+검토 전 아래 파일 쌍을 동시에 열어 shape을 교차 확인한다:
+```
+API route  (src/api/**)  ↔  프론트 훅 (src/hooks/**)
+  → quiz.type 실제 사용 여부, isCorrect 노출 여부
+
+DB 스키마  (prisma/schema.prisma)  ↔  API 비즈니스 로직
+  → maxAttempts 기본값, showAnswerAfter 설정
+
+UI 컴포넌트  ↔  테스트 파일
+  → 재시도 버튼 onClick 실제 연결 여부 (DOM 존재 ≠ 작동)
+```
+가장 흔한 버그: "API와 프론트 shape 불일치" — 단방향 코드 읽기로는 발견 불가.
+
 **검토 기준**:
 
 | 항목 | 점검 질문 |

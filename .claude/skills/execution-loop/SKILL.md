@@ -1,6 +1,6 @@
 ---
 name: execution-loop
-description: 수정→검증→반복의 실행 루프를 관리합니다. 합격 기준 충족 시까지 자동으로 반복하며, 무한 루프를 방지합니다.
+description: 구현 후 REJECTED 판정이 나오거나 '/execution-loop'을 입력하면 반드시 이 스킬을 사용할 것. 합격 기준 충족까지 수정→검증→반복을 자동화한다. 최대 5회 반복, 루프 상태를 .execution-loop-state 파일에 기록한다.
 ---
 
 # execution-loop 스킬
@@ -44,6 +44,23 @@ description: 수정→검증→반복의 실행 루프를 관리합니다. 합�
 ```
 
 모호한 조건("제대로 동작", "좋게") = 계약 무효. 재작성하세요.
+
+---
+
+## 루프 상태 추적
+
+각 루프 시작/종료 시 `.execution-loop-state` 파일을 갱신한다.
+settings.json 훅이 세션 시작 시 이 파일을 읽어 현재 루프 상태를 표시한다.
+
+```bash
+# 루프 시작 시
+echo "루프 N/5 진행 중 — [기능명] — $(date +%Y-%m-%d)" > .execution-loop-state
+
+# 루프 완료 시
+echo "완료 — [기능명] — VERDICT=$(bash .claude/skills/verify/verify.sh 2>/dev/null | grep -oE 'VERDICT=[A-Z]+') — $(date +%Y-%m-%d)" > .execution-loop-state
+```
+
+이 파일이 있으면 새 세션 시작 시 "이전 루프가 미완료 상태입니다" 알림이 표시됨.
 
 ---
 
@@ -142,6 +159,7 @@ docs/education-principles.md를 기준으로 교육적으로 해로운 요소를
 
 ✅ 작업 정리
    - [ ] progress.md 업데이트 완료
+   - [ ] .execution-loop-state 파일에 완료 상태 기록
    - [ ] 변경 요약 한 문장으로 작성
 ```
 
