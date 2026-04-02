@@ -286,7 +286,7 @@
 ### 즉시 필요
 
 - [x] GitHub 원격 리포지토리 생성 (`tigerjk9/Harness-Engineering`)
-- [ ] Template Repository 설정 — GitHub 웹 Settings에서 직접 체크 필요
+- [x] Template Repository 설정 완료 (2026-04-03)
 - [x] 커밋 + 푸쉬 완료
 
 ### 추후 고려
