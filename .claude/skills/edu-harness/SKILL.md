@@ -94,6 +94,30 @@ progress.md, architecture.md, docs/education-principles.md를 먼저 읽은 후 
 
 ---
 
+## 단계 1.5 — SPRINT CONTRACT (사용자 승인 필수)
+
+> Anthropic 연구: $9 단일 에이전트 vs $200 하네스의 차이는 "완료의 의미를 사전에 합의했는가"였다.
+
+PLAN 승인 직후, EDU DESIGN 시작 전에 실행:
+
+```
+이번 스프린트의 합격 기준을 명시해줘.
+
+스프린트 계약: [기능명]
+
+완료 조건:
+- [ ] [교육 기능 조건 — 예: 형성평가 재시도 버튼이 오답 시 즉시 표시됨]
+- [ ] [기술 조건 — 예: isCorrect가 API 응답에 노출되지 않음]
+- [ ] [접근성 조건 — 예: fieldset+legend로 문항 그룹화]
+
+Pedagogy Reviewer는 완료 조건 기준으로만 채점합니다.
+verify.sh는 위 조건을 grep으로 검증합니다.
+```
+
+사용자 승인 후 단계 2로 진행.
+
+---
+
 ## 단계 2 — EDU DESIGN
 
 평가 요소가 있으면 유형(FORMATIVE/SUMMATIVE)을 결정하고 설정값을 확정한다.
