@@ -67,3 +67,39 @@ grep -rn "GradeAuditLog\|gradeAuditLog" src/ --include="*.ts" | grep -v "\.test\
 - [ ] 성적 변경 함수에 GradeAuditLog.create() 호출
 - [ ] 시드 기반 문항 랜덤화 구현 (shuffleWithSeed 또는 동등)
 - [ ] 재시도 버튼 형성평가 UI에 존재
+
+---
+
+## 채점 API 페이로드 표준
+
+### 올바른 응답 형식 — 채점 결과만, 정답 없음
+
+```json
+{
+  "submissionId": "uuid",
+  "quizType": "FORMATIVE",
+  "score": 75,
+  "totalPoints": 100,
+  "attemptCount": 1,
+  "feedback": {
+    "message": "아직 아니에요. 다시 생각해볼까요?",
+    "hintsAvailable": true
+  },
+  "retryAllowed": true
+}
+```
+
+### 금지된 응답 형식 — CRITICAL 위반
+
+```json
+{
+  "submissionId": "uuid",
+  "score": 75,
+  "isCorrect": true,
+  "correctAnswerId": "a3f2",
+  "answers": [{ "id": "q1", "correct": true, "correctChoice": "B" }]
+}
+```
+
+`isCorrect`, `correctAnswerId`, `correct`, `correctChoice` 등 정답을 유추할 수 있는 필드는 어떤 형태로도 클라이언트에 노출 금지.
+총괄평가의 경우 `feedback.message`조차 정답 힌트를 포함해서는 안 됩니다.

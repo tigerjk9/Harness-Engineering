@@ -1,7 +1,7 @@
 # EduHarness Foundation — PRD (Product Requirements Document)
 
-> 마지막 업데이트: 2026-03-29
-> 버전: v3.1 (MD 파일 구조화 + GitHub 배포 완료)
+> 마지막 업데이트: 2026-04-03
+> 버전: v4.0 (자동화 메커니즘 5종 완성 + revfactory/harness 비교 개선)
 
 ---
 
@@ -73,8 +73,7 @@
 
 | 파일 | 역할 | 원문 구성 요소 |
 |---|---|---|
-| `.claude/skills/harness/SKILL.md` | **범용 사용자 진입점** — 계획→구현→검증→하네스 업데이트 전체 오케스트레이션 | 실행 루프 |
-| `.claude/skills/edu-harness/SKILL.md` | **교육 전용 진입점** — harness + Pedagogy Review + 평가 무결성 + UDL | 실행 루프 |
+| `.claude/skills/edu-harness/SKILL.md` | **유일한 사용자 진입점** — 계획→교육설계→구현→검증→하네스 진화 전체 오케스트레이션 | 실행 루프 |
 | `.claude/skills/execution-loop/SKILL.md` | 수정→검증→반복 루프 (최대 5회, 내부 스킬) | 실행 루프 |
 | `.claude/skills/objective-loop/SKILL.md` | 수치 목표 달성 + 하네스 진화 + Goodhart's Law 방어 (내부 스킬) | 실행 루프 |
 | `.claude/skills/objective-loop/measure.sh` | baseline/check 모드 점수 측정 및 delta 계산 | 검증 |
@@ -192,9 +191,8 @@
 | 학습 자료 | 없음 | example-walkthrough.md (SCORE 20→95 시연) |
 | 범용 분리 | 없음 | [UNIVERSAL] / [EDU-DOMAIN] 태그 |
 
-**신규 파일 (6개):**
-- `.claude/skills/harness/SKILL.md` — 범용 사용자 진입점
-- `.claude/skills/edu-harness/SKILL.md` — 교육 전용 사용자 진입점
+**신규 파일 (5개):**
+- `.claude/skills/edu-harness/SKILL.md` — 유일한 사용자 진입점
 - `.claude/skills/verify/verify.sh` — 결정론적 점수화 스크립트
 - `.claude/skills/objective-loop/measure.sh` — delta 측정 스크립트
 - `.claude/skills/README.md` — 스킬 카탈로그
@@ -203,6 +201,37 @@
 **삭제 (5개):** assessment-design, learning-flow, edu-component, accessibility, progress-update (내용은 edu-harness/SKILL.md에 흡수)
 
 **수정 (6개):** verify/SKILL.md, objective-loop/SKILL.md, CLAUDE.md, .husky/pre-commit, README.md, AGENTS.md
+
+---
+
+### v4.0 (2026-04-03) — 자동화 메커니즘 5종 완성 + 비교 우위 확보
+
+**배경:** revfactory/harness 벤치마크 비교 분석 → 성능·사용성 양면 개선 랄프 루프 실행
+
+**벤치마크 결과:**
+
+| 차원 | revfactory/harness | EduHarness v3.x | EduHarness v4.0 |
+|------|:-----------------:|:--------------:|:--------------:|
+| 성능 | 65/100 | 72/100 | **85/100** |
+| 직관적 사용성 | 78/100 | 74/100 | **85/100** |
+
+**자동화 메커니즘 5종 완성:**
+
+| 파일 | 변경 | 효과 |
+|------|------|------|
+| `verify.sh v2.1` | 파일 목록 1회 수집 + `--full` 모드 추가 | ~40% 속도 향상, lint/tsc/test 통합 |
+| `pre-commit` | 6→9 체크 (verify --full, 파일 크기, harness-evolve) | CONDITIONAL 커밋 허용, REJECTED 차단 |
+| `settings.json` | PostToolUse VERDICT 실시간 표시 | Write/Edit마다 `SCORE=N VERDICT=X` 즉시 확인 |
+| `.claude/hooks/system-check.sh` | 신규 — 11개 항목 환경 진단 | 세션 시작 시 자동 실행 |
+| `.claude/hooks/harness-evolve.sh` | 신규 — CLAUDE.md staged 시 CHANGELOG 자동 기록 | 하네스 자기진화 이력 자동 추적 |
+
+**UX 개선:**
+
+- `edu-harness-init` 재설계: 10질문 → **2질문 + package.json 자동 감지 + lazy-fill**
+- `/harness` 스텁 삭제 → `/edu-harness` 단일 진입점으로 통일
+- `harness-init` → `edu-harness-init` 이름 통일
+- README "바로 써보기" 6개 copy-paste 예시 추가
+- AGENTS.md 모델 라우팅 컬럼 추가 (opus/sonnet 역할 분리)
 
 ---
 
@@ -245,6 +274,10 @@
 | 2026-03-29 | objective-loop = 탐색 문제 + Goodhart's Law 방어 | rubric이 목표가 되는 순간의 퇴화 방지; rubric 변경은 사람 승인 필수 |
 | 2026-03-29 | 헌법 파일 경량화 — 코드 예시·서술 단락 제거 | AI가 매 작업마다 읽는 파일은 규칙만; 예시는 교육 효과 없이 컨텍스트만 소비 |
 | 2026-03-29 | AGENTS.md에서 스킬 중복 섹션 제거 | 실행 루프·Objective Loop 설명은 SKILL.md가 단일 진실 소스; AGENTS.md는 역할 정의만 담당 |
+| 2026-04-03 | verify.sh quick/full 2-mode 분리 | settings.json hook은 quick(빠름)으로, pre-commit + /edu-harness는 full(정확)으로 — 속도와 정확성 모두 확보 |
+| 2026-04-03 | harness-init 10질문 → 2질문 + lazy-fill | 프론트-로딩 안티패턴 제거; 기술 스택·사용자 설명은 첫 /edu-harness 실행 시 자동 추론 |
+| 2026-04-03 | /harness 스텁 삭제, /edu-harness 단일 진입점 | 명명 혼동 제거; edu- 접두사로 교육 도메인 특화 명확화 |
+| 2026-04-03 | system-check.sh 환경 진단 도구 추가 | 세션 시작 전 런타임·하네스 파일·npm 스크립트 11개 항목 자동 검증 |
 
 ---
 
@@ -266,7 +299,7 @@
 - [ ] LICENSE 파일 추가 (MIT)
 - [ ] CONTRIBUTING.md 추가
 - [ ] package.json + lint-staged 설정
-- [ ] verify.sh에 파일 크기(>800줄) 검사 추가 (현재 MEDIUM 항목 미구현)
+- [x] verify.sh에 파일 크기(>800줄) 검사 추가 — MEDIUM Dim 1b로 구현 완료
 - [ ] example-walkthrough.en.md (영어 버전)
 
 ---

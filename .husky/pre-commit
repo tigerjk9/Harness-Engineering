@@ -145,7 +145,7 @@ if [ -d "src" ]; then
   echo "💬 [6/6] 심리 안전: 피드백 메시지 검사..."
 
   NEGATIVE_MSG=$(find src -name "*.ts" -o -name "*.tsx" 2>/dev/null \
-    | xargs grep -ln "틀렸습니다\|오답입니다\|실패했습니다\|Wrong answer\|Incorrect answer" 2>/dev/null \
+    | xargs grep -ln "틀렸습니다\|오답입니다\|실패했습니다\|틀린 것 같\|맞지 않았\|정답이 아니\|오류입니다\|Wrong answer\|Incorrect answer\|You failed\|That.s wrong\|Sorry.*wrong\|Unfortunately.*wrong" 2>/dev/null \
     | grep -v "\.test\.\|__tests__\|\.spec\." | head -5)
 
   if [ -n "$NEGATIVE_MSG" ]; then

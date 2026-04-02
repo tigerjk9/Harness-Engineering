@@ -6,19 +6,20 @@ Claude Code에서 `/스킬명 ...` 형태로 호출합니다.
 
 ## 사용자 진입점
 
-| 스킬 | 명령어 |
-|------|--------|
-| **edu-harness** | `/edu-harness 기능명을 만들어줘.` |
+| 스킬 | 명령어 | 사용 시점 |
+|------|--------|-----------|
+| **edu-harness-init** | `/edu-harness-init` | 클론 직후 1회 |
+| **edu-harness** | `/edu-harness 기능명을 만들어줘.` | 모든 기능 구현 |
 
 ---
 
 ## 내부 워크플로우 스킬 (단독 사용도 가능)
 
-| 스킬 | 용도 | 명령어 |
-|------|------|--------|
-| **execution-loop** | 합격 기준까지 수정→검증→반복 | `/execution-loop ...` |
-| **verify** | 6차원 수치 검증 | `bash .claude/skills/verify/verify.sh` |
-| **objective-loop** | 수치 목표 달성 + 하네스 진화 | `/objective-loop ...` |
+| 스킬 | 용도 | 명령어 | 한 줄 구분 |
+|------|------|--------|-----------|
+| **execution-loop** | 합격 기준까지 수정→검증→반복 | `/execution-loop ...` | REJECTED → APPROVED: 코드를 고친다 |
+| **verify** | 6차원 수치 검증 | `bash .claude/skills/verify/verify.sh` | 지금 상태가 몇 점인지 측정한다 |
+| **objective-loop** | 수치 목표 달성 + 하네스 진화 | `/objective-loop ...` | SCORE 80 이상: 코드 + 검증 기준을 함께 진화시킨다 |
 
 ---
 
