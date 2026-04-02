@@ -4,12 +4,11 @@ Claude Code에서 `/스킬명 ...` 형태로 호출합니다.
 
 ---
 
-## 사용자 진입점 (2개만 기억하면 됩니다)
+## 사용자 진입점
 
-| 스킬 | 대상 | 명령어 |
-|------|------|--------|
-| **harness** | 모든 프로젝트 (범용) | `/harness 기능명을 만들어줘.` |
-| **edu-harness** | 교육 앱 전용 | `/edu-harness 기능명을 만들어줘.` |
+| 스킬 | 명령어 |
+|------|--------|
+| **edu-harness** | `/edu-harness 기능명을 만들어줘.` |
 
 ---
 
@@ -41,8 +40,7 @@ bash .claude/skills/objective-loop/measure.sh check "루프 1 완료"
 ## 언제 무엇을 쓰나요?
 
 ```
-새 기능 만들기 (교육 앱)     → edu-harness
-새 기능 만들기 (범용)        → harness
+새 기능 만들기               → edu-harness
 점수 개선이 필요할 때        → objective-loop
 구현 후 빠른 검증            → verify.sh
 합격까지 자동 수정           → execution-loop
