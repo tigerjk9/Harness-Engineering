@@ -191,4 +191,6 @@ bash .claude/hooks/harness-checkpoint.sh checkpoint "[기능명] 구현 전"
 | `AGENTS.md` | 에이전트 역할 분리 |
 | `docs/education-principles.md` | 형성/총괄 평가, Bloom's taxonomy, UDL 원칙 |
 | `docs/example-walkthrough.md` | 실전 하네스 구축 워크스루 |
+| `docs/decision-log.md` | 아키텍처 결정 기록 (ADR) — "왜 이렇게 됐는가" |
+| `docs/harness-audit.md` | 분기별 하네스 가정 감사 체크리스트 |
 | `.claude/skills/README.md` | 스킬 카탈로그 |

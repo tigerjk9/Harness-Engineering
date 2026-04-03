@@ -109,6 +109,23 @@ else
   check_warn "git 사용자 설정" "git config user.name/email 설정 필요"
 fi
 
+# ── v6.0 신규 하네스 컴포넌트 검사 ────────────────────────────────
+if [ -f "progress.md" ]; then
+  grep -q "컨텍스트 앵커" progress.md 2>/dev/null \
+    && check_pass "progress.md 컨텍스트 앵커 섹션" \
+    || check_warn "progress.md 컨텍스트 앵커" "'## 컨텍스트 앵커' 섹션 없음 — 컨텍스트 전환 추적 비활성"
+fi
+
+[ -f "docs/harness-audit.md" ] \
+  && check_pass "docs/harness-audit.md (분기별 감사)" \
+  || check_warn "docs/harness-audit.md" "분기별 하네스 감사 체크리스트 없음"
+
+if [ -f "AGENTS.md" ]; then
+  grep -q "Evaluator" AGENTS.md 2>/dev/null \
+    && check_pass "AGENTS.md Evaluator 역할" \
+    || check_warn "AGENTS.md Evaluator" "Generator-Evaluator 패턴 미적용 — Goodhart's Law 방어 없음"
+fi
+
 # ── verify.sh 실행 가능 여부 ──────────────────────────────────────
 if [ -f ".claude/skills/verify/verify.sh" ]; then
   bash .claude/skills/verify/verify.sh --check-only 2>/dev/null | grep -q "VERDICT=OK" \

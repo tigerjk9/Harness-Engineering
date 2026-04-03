@@ -11,6 +11,12 @@
 
 | 날짜 | 파일 | 추가된 규칙 | 발견 맥락 |
 |------|------|------------|-----------|
+| 2026-04-04 | verify.sh | Dim10 함수 길이 50줄 초과 + Dim11 중첩 4단계 초과 MEDIUM 검사 추가 (5→7개) | v7.0 — CLAUDE.md 규칙 자동화 갭 해소 |
+| 2026-04-04 | system-check.sh | 앵커 섹션/harness-audit.md/Evaluator 역할 존재 검사 3개 추가 (15→18항목) | v7.0 — v6.0 컴포넌트 커버리지 갭 해소 |
+| 2026-04-04 | harness-health.sh | 하네스 전체 상태 대시보드 신규 생성 (verify/system-check/checkpoint/loop/delta/changelog/anchor) | v7.0 — 관찰성 강화 |
+| 2026-04-04 | execution-loop/SKILL.md | 단계 0 스프린트 계약 사전 확인 강제화 + contract_status 필드 포맷 추가 | v7.0 — Anthropic $9 vs $200 연구 강화 |
+| 2026-04-04 | docs/decision-log.md | ADR 구조화 템플릿 신규 생성 + ADR-001/002 실제 예시 포함 | v7.0 — 의사결정 추적 체계화 |
+| 2026-04-04 | CLAUDE.md | 참고 문서 테이블에 decision-log.md + harness-audit.md 추가 | v7.0 |
 | 2026-04-04 | progress.md | 컨텍스트 앵커 섹션(4필드) + 실제 작성 예시 추가 | 오토 리서치 v6.0 — Anchored Context Transfer |
 | 2026-04-04 | CLAUDE.md | 앵커 작성 의무 + 단일 기능 세션 경계 + 6단계 세션 의식 + 도구 위험 분류 테이블 추가 | 오토 리서치 v6.0 — OWASP Agentic + IMPACT Framework |
 | 2026-04-04 | execution-loop/SKILL.md | Parse/Tool/Logic 오류 3분류 + 계층적 복구 전략(L1~L4) + 증상 매핑 표 추가 | 오토 리서치 v6.0 — arXiv 2603.06847 |

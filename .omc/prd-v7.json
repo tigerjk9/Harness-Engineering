@@ -1,0 +1,77 @@
+{
+  "title": "EduHarness 하네스 엔지니어링 고도화 v7.0 — 규칙 자동화 + 관찰성 강화",
+  "created": "2026-04-04",
+  "completed": "2026-04-04",
+  "architectVerdict": "APPROVED",
+  "researchBasis": [
+    "CLAUDE.md 코딩 규칙 vs verify.sh 자동화 갭 분석",
+    "Harness Observability: 단일 대시보드 패턴",
+    "Sprint Contract Enforcement: 사전 합의 강제화",
+    "ADR (Architecture Decision Records) 패턴",
+    "system-check.sh v6.0 신규 컴포넌트 커버리지 갭"
+  ],
+  "stories": [
+    {
+      "id": "US-201",
+      "title": "verify.sh — 함수 길이(50줄) + 중첩 깊이(4단계) MEDIUM 검사 추가",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "MEDIUM 검사: 50줄 초과 밀집 코드 블록 탐지 (awk 기반 연속 비공백 라인 카운트)",
+        "MEDIUM 검사: 중첩 깊이 4단계 초과 탐지 (10개 이상 연속 선행 공백 heuristic)",
+        "MEDIUM 총 개수 5 → 7로 증가",
+        "bash verify.sh 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-202",
+      "title": "system-check.sh — v6.0 신규 컴포넌트 3개 검사 항목 추가",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "progress.md에 '컨텍스트 앵커' 섹션 존재 여부 검사 (WARN)",
+        "docs/harness-audit.md 파일 존재 여부 검사 (WARN)",
+        "AGENTS.md에 'Evaluator' 역할 존재 여부 검사 (WARN)",
+        "검사 항목 15 → 18개로 증가"
+      ]
+    },
+    {
+      "id": "US-203",
+      "title": "harness-health.sh — 단일 명령 하네스 전체 상태 대시보드 신규 생성",
+      "priority": 3,
+      "passes": true,
+      "acceptanceCriteria": [
+        ".claude/hooks/harness-health.sh 파일 생성",
+        "verify.sh 현재 SCORE/VERDICT 표시",
+        "system-check.sh 요약(✅/⚠️/❌ 카운트) 표시",
+        "checkpoint 상태(.harness-checkpoint) + loop 상태(.execution-loop-state) 표시",
+        "HARNESS_CHANGELOG.md 총 규칙 추가 수 표시",
+        "bash .claude/hooks/harness-health.sh 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-204",
+      "title": "execution-loop SKILL.md — 스프린트 계약 단계 0 강제화",
+      "priority": 4,
+      "passes": true,
+      "acceptanceCriteria": [
+        "execution-loop SKILL.md '세션 시작 의식' 전에 '단계 0 — 스프린트 계약 사전 확인' 추가",
+        "스프린트 계약 없으면 코드 작성 금지 규칙 명시 (계약 작성 → 사용자 승인 → 코드 순서 강제)",
+        ".execution-loop-state 파일 포맷에 contract_status 필드 추가 지침 포함",
+        "기존 execution-loop 구조 유지"
+      ]
+    },
+    {
+      "id": "US-205",
+      "title": "docs/decision-log.md + CLAUDE.md 참조 — ADR 구조화 템플릿",
+      "priority": 5,
+      "passes": true,
+      "acceptanceCriteria": [
+        "docs/decision-log.md 파일 생성 — ADR 형식(Context/Decision/Alternatives/Consequences/Status)",
+        "Status 값: ACTIVE / SUPERSEDED / DEPRECATED 정의",
+        "실제 예시 ADR 1개 포함 (이 프로젝트의 실제 결정 사항)",
+        "CLAUDE.md 참고 문서 테이블에 decision-log.md 항목 추가"
+      ]
+    }
+  ]
+}

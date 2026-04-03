@@ -209,6 +209,30 @@ else
   M_PASS=$((M_PASS + 1))
 fi
 
+# ── [신규] Dim 10: 함수 길이 50줄 초과 감지 (MEDIUM) ────────────────
+# 연속 비공백 라인 50줄 초과 블록 탐지 (함수 길이 heuristic)
+M_TOTAL=$((M_TOTAL + 1))
+if [ -n "$ALL_FILES" ]; then
+  LONG_FN=$(echo "$ALL_FILES" | while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    awk 'BEGIN{c=0} /^\s*$/{if(c>50){print FILENAME; exit}; c=0; next} {c++} END{if(c>50){print FILENAME}}' "$f" 2>/dev/null
+  done | sort -u | grep -v "^$" | head -3)
+  [ -z "$LONG_FN" ] && M_PASS=$((M_PASS + 1))
+else
+  M_PASS=$((M_PASS + 1))
+fi
+
+# ── [신규] Dim 11: 중첩 깊이 4단계 초과 감지 (MEDIUM) ────────────────
+# 10개 이상 연속 선행 공백 = 2-space indent 기준 5단계 이상
+M_TOTAL=$((M_TOTAL + 1))
+if [ -n "$ALL_FILES" ]; then
+  DEEP_NEST=$(echo "$ALL_FILES" | xargs grep -l "^          [^ ]" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|mock")
+  [ -z "$DEEP_NEST" ] && M_PASS=$((M_PASS + 1))
+else
+  M_PASS=$((M_PASS + 1))
+fi
+
 # ── [신규] Dim 9: 직접 변이 패턴 감지 (MEDIUM) ───────────────────
 # .push( .splice( .pop( .shift( .unshift( — 불변성 원칙 위반
 M_TOTAL=$((M_TOTAL + 1))
