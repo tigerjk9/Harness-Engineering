@@ -11,6 +11,9 @@
 
 | 날짜 | 파일 | 추가된 규칙 | 발견 맥락 |
 |------|------|------------|-----------|
+| 2026-04-04 | CLAUDE.md | 주요 명령어에 하네스 명령어 블록 분리 추가 (harness-health/verify/checkpoint) | v8.0 — 통합 마무리 |
+| 2026-04-04 | harness-evolve.sh | 추적 대상 docs/*.md + verify.sh 확장, grep 패턴 강화 | v8.0 — 하네스 진화 문서 커버리지 확장 |
+| 2026-04-04 | settings.json | UserPromptSubmit에 verify SCORE/VERDICT 표시 + 앵커 읽기 안내 강화 | v8.0 — 세션 시작 가시성 향상 |
 | 2026-04-04 | verify.sh | Dim10 함수 길이 50줄 초과 + Dim11 중첩 4단계 초과 MEDIUM 검사 추가 (5→7개) | v7.0 — CLAUDE.md 규칙 자동화 갭 해소 |
 | 2026-04-04 | system-check.sh | 앵커 섹션/harness-audit.md/Evaluator 역할 존재 검사 3개 추가 (15→18항목) | v7.0 — v6.0 컴포넌트 커버리지 갭 해소 |
 | 2026-04-04 | harness-health.sh | 하네스 전체 상태 대시보드 신규 생성 (verify/system-check/checkpoint/loop/delta/changelog/anchor) | v7.0 — 관찰성 강화 |

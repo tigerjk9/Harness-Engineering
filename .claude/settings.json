@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; LOOP=$(cat .execution-loop-state 2>/dev/null || echo '없음'); DELTA=$(tail -3 objective-loop-log.md 2>/dev/null | grep -oE 'delta: [+\\-][0-9]+' | tail -1 || echo '없음'); CHECKPOINT=$(tail -1 .harness-checkpoint 2>/dev/null | cut -d'|' -f3 | tr -d ' ' || echo '없음'); echo \"  💡 세션 시작: progress.md → architecture.md 순으로 읽은 후 시작하세요\"; echo \"  📍 루프: $LOOP | 마지막 delta: $DELTA | 체크포인트: $CHECKPOINT\""
+            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; VERIFY=$(bash .claude/skills/verify/verify.sh 2>/dev/null | grep -oE 'SCORE=[0-9]+ VERDICT=[A-Z]+' || echo 'SCORE=? VERDICT=?'); LOOP=$(cat .execution-loop-state 2>/dev/null || echo '없음'); DELTA=$(tail -3 objective-loop-log.md 2>/dev/null | grep -oE 'delta: [+\\-][0-9]+' | tail -1 || echo '없음'); CHECKPOINT=$(tail -1 .harness-checkpoint 2>/dev/null | cut -d'|' -f3 | tr -d ' ' || echo '없음'); echo \"  📊 verify: $VERIFY | 루프: $LOOP | delta: $DELTA\"; echo \"  💡 세션 시작: progress.md 앵커 → architecture.md 순으로 읽은 후 시작하세요\""
           }
         ]
       }

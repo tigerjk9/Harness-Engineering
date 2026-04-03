@@ -1,0 +1,49 @@
+{
+  "title": "EduHarness 하네스 엔지니어링 고도화 v8.0 — 통합 마무리",
+  "created": "2026-04-04",
+  "completed": "2026-04-04",
+  "architectVerdict": "APPROVED",
+  "researchBasis": [
+    "harness-health.sh 신규 도구 CLAUDE.md 통합 누락",
+    "harness-evolve.sh docs/*.md 변경 미추적 갭",
+    "settings.json UserPromptSubmit verify SCORE 미표시",
+    "CLAUDE.md 주요 명령어에 하네스 명령어 미포함"
+  ],
+  "stories": [
+    {
+      "id": "US-301",
+      "title": "CLAUDE.md — 하네스 명령어 섹션 분리 + 주요 명령어에 harness-health.sh 추가",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "CLAUDE.md 주요 명령어 섹션에 '하네스 명령어' 블록 추가: harness-health.sh / verify.sh / harness-checkpoint.sh",
+        "프로젝트 명령어([YOUR_DEV_COMMAND] 등)와 하네스 명령어를 별도 블록으로 분리",
+        "기존 주요 명령어 섹션 구조 유지"
+      ]
+    },
+    {
+      "id": "US-302",
+      "title": "harness-evolve.sh — docs/*.md + verify.sh 변경 추적 확장",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "harness-evolve.sh 추적 대상에 'docs/*.md' 패턴 추가 (docs/harness-audit.md, docs/decision-log.md 등)",
+        "harness-evolve.sh 추적 대상에 '.claude/skills/verify/verify.sh' 추가",
+        "변경 파일 동적 감지 grep 패턴에 'docs/.*\\.md\\|verify\\.sh' 추가",
+        "기존 CLAUDE.md + AGENTS.md 추적 유지"
+      ]
+    },
+    {
+      "id": "US-303",
+      "title": "settings.json — UserPromptSubmit에 verify SCORE + 하네스 힌트 강화",
+      "priority": 3,
+      "passes": true,
+      "acceptanceCriteria": [
+        "UserPromptSubmit 훅에 verify.sh SCORE/VERDICT 표시 추가",
+        "세션 시작 안내 메시지에 progress.md 앵커 읽기 명시",
+        "기존 루프/delta/checkpoint 상태 표시 유지",
+        "설정 파일 JSON 유효성 유지"
+      ]
+    }
+  ]
+}

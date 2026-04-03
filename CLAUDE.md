@@ -173,11 +173,20 @@ bash .claude/hooks/harness-checkpoint.sh checkpoint "[기능명] 구현 전"
 ## 주요 명령어
 
 ```bash
+# ── 프로젝트 명령어 (실제 값으로 교체) ──
 [YOUR_DEV_COMMAND]        # 개발 서버
 [YOUR_TEST_COMMAND]       # 테스트
 [YOUR_LINT_COMMAND]       # 린트
 [YOUR_TYPECHECK_COMMAND]  # 타입 체크
 [YOUR_BUILD_COMMAND]      # 빌드
+
+# ── 하네스 명령어 (항상 사용 가능) ──
+bash .claude/hooks/harness-health.sh          # 🩺 전체 상태 대시보드
+bash .claude/skills/verify/verify.sh          # 📊 코드 품질 검증 (quick)
+bash .claude/skills/verify/verify.sh --full   # 📊 코드 품질 검증 (lint+tsc+test 포함)
+bash .claude/hooks/harness-checkpoint.sh list      # 💾 체크포인트 목록
+bash .claude/hooks/harness-checkpoint.sh restore   # 💾 마지막 체크포인트로 복원
+bash .claude/hooks/system-check.sh            # 🔧 환경 진단
 ```
 
 ---

@@ -15,11 +15,12 @@ MANUAL=false
 
 DATE=$(date +%Y-%m-%d)
 CHANGELOG="HARNESS_CHANGELOG.md"
+TRACK_PATTERN="CLAUDE.md AGENTS.md docs/*.md .claude/skills/verify/verify.sh"
 
-# staged CLAUDE.md 변경 추출 (추가된 줄만, 메타줄 제외)
+# staged 변경 추출 (추가된 줄만, 메타줄 제외)
 if $MANUAL; then
   # 수동 모드: 마지막 커밋과 현재 HEAD 비교
-  NEW_LINES=$(git diff HEAD~1 -- CLAUDE.md AGENTS.md 2>/dev/null \
+  NEW_LINES=$(git diff HEAD~1 -- $TRACK_PATTERN 2>/dev/null \
     | grep "^+" | grep -v "^+++" \
     | grep -v "^+#\|^+---\|^+$\|^+>\|^+ *$" \
     | sed 's/^+//' \
@@ -27,7 +28,7 @@ if $MANUAL; then
     | head -5)
 else
   # 자동 모드: staged 변경 감지
-  NEW_LINES=$(git diff --cached -- CLAUDE.md AGENTS.md 2>/dev/null \
+  NEW_LINES=$(git diff --cached -- $TRACK_PATTERN 2>/dev/null \
     | grep "^+" | grep -v "^+++" \
     | grep -v "^+#\|^+---\|^+$\|^+>\|^+ *$" \
     | sed 's/^+//' \
@@ -52,9 +53,9 @@ fi
 
 # 변경된 파일 감지
 if $MANUAL; then
-  CHANGED_FILE=$(git diff HEAD~1 --name-only 2>/dev/null | grep -E "CLAUDE.md|AGENTS.md" | head -1 || echo "CLAUDE.md")
+  CHANGED_FILE=$(git diff HEAD~1 --name-only 2>/dev/null | grep -E "CLAUDE\.md|AGENTS\.md|docs/.*\.md|verify\.sh" | head -1 || echo "CLAUDE.md")
 else
-  CHANGED_FILE=$(git diff --cached --name-only 2>/dev/null | grep -E "CLAUDE.md|AGENTS.md" | head -1 || echo "CLAUDE.md")
+  CHANGED_FILE=$(git diff --cached --name-only 2>/dev/null | grep -E "CLAUDE\.md|AGENTS\.md|docs/.*\.md|verify\.sh" | head -1 || echo "CLAUDE.md")
 fi
 ENTRY="| $DATE | $CHANGED_FILE | $RULE_SUMMARY | $CTX |"
 
