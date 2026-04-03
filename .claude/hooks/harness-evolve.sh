@@ -19,7 +19,7 @@ CHANGELOG="HARNESS_CHANGELOG.md"
 # staged CLAUDE.md 변경 추출 (추가된 줄만, 메타줄 제외)
 if $MANUAL; then
   # 수동 모드: 마지막 커밋과 현재 HEAD 비교
-  NEW_LINES=$(git diff HEAD~1 -- CLAUDE.md 2>/dev/null \
+  NEW_LINES=$(git diff HEAD~1 -- CLAUDE.md AGENTS.md 2>/dev/null \
     | grep "^+" | grep -v "^+++" \
     | grep -v "^+#\|^+---\|^+$\|^+>\|^+ *$" \
     | sed 's/^+//' \
@@ -27,7 +27,7 @@ if $MANUAL; then
     | head -5)
 else
   # 자동 모드: staged 변경 감지
-  NEW_LINES=$(git diff --cached -- CLAUDE.md 2>/dev/null \
+  NEW_LINES=$(git diff --cached -- CLAUDE.md AGENTS.md 2>/dev/null \
     | grep "^+" | grep -v "^+++" \
     | grep -v "^+#\|^+---\|^+$\|^+>\|^+ *$" \
     | sed 's/^+//' \
@@ -50,7 +50,13 @@ else
   CTX="pre-commit harness-evolve"
 fi
 
-ENTRY="| $DATE | CLAUDE.md | $RULE_SUMMARY | $CTX |"
+# 변경된 파일 감지
+if $MANUAL; then
+  CHANGED_FILE=$(git diff HEAD~1 --name-only 2>/dev/null | grep -E "CLAUDE.md|AGENTS.md" | head -1 || echo "CLAUDE.md")
+else
+  CHANGED_FILE=$(git diff --cached --name-only 2>/dev/null | grep -E "CLAUDE.md|AGENTS.md" | head -1 || echo "CLAUDE.md")
+fi
+ENTRY="| $DATE | $CHANGED_FILE | $RULE_SUMMARY | $CTX |"
 
 # HARNESS_CHANGELOG.md가 없으면 생성
 if [ ! -f "$CHANGELOG" ]; then

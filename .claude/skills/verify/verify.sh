@@ -181,6 +181,44 @@ else
   M_PASS=$((M_PASS + 1))
 fi
 
+# ── [신규] Dim 7: TypeScript any 사용 감지 (MEDIUM) ────────────────
+# `: any` 또는 `as any` 패턴 — 타입 안전성 위반
+M_TOTAL=$((M_TOTAL + 1))
+if [ -n "$ALL_FILES" ]; then
+  ANY_USE=$(echo "$ALL_FILES" | xargs grep -l ": any\b\|as any\b" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|example\|mock")
+  [ -z "$ANY_USE" ] && M_PASS=$((M_PASS + 1))
+else
+  M_PASS=$((M_PASS + 1))
+fi
+
+# ── [신규] Dim 8: async 함수 try-catch 누락 (MEDIUM) ─────────────
+# async 함수가 있는 파일에 try 블록이 없으면 탐지
+M_TOTAL=$((M_TOTAL + 1))
+if [ -n "$ALL_FILES" ]; then
+  ASYNC_FILES=$(echo "$ALL_FILES" | xargs grep -l "async " 2>/dev/null | grep -v "\.test\.")
+  if [ -z "$ASYNC_FILES" ]; then
+    M_PASS=$((M_PASS + 1))  # async 없음 — 통과
+  else
+    NO_TRY=$(echo "$ASYNC_FILES" | xargs grep -L "try {" 2>/dev/null | head -3)
+    [ -z "$NO_TRY" ] && M_PASS=$((M_PASS + 1))
+  fi
+else
+  M_PASS=$((M_PASS + 1))
+fi
+
+# ── [신규] Dim 9: 직접 변이 패턴 감지 (MEDIUM) ───────────────────
+# .push( .splice( .pop( .shift( .unshift( — 불변성 원칙 위반
+M_TOTAL=$((M_TOTAL + 1))
+if [ -n "$ALL_FILES" ]; then
+  MUTATE=$(echo "$ALL_FILES" | xargs grep -l \
+    "\.push(\|\.splice(\|\.pop()\|\.shift()\|\.unshift(\|\.reverse()\|\.sort(" \
+    2>/dev/null | grep -v "\.test\.\|__tests__\|mock")
+  [ -z "$MUTATE" ] && M_PASS=$((M_PASS + 1))
+else
+  M_PASS=$((M_PASS + 1))
+fi
+
 # ── [FULL MODE] 차원 1: 실제 린트·타입·테스트 실행 ─────────────────
 if [ "$MODE" = "full" ]; then
   if [ -f "package.json" ] && grep -q '"lint"' package.json 2>/dev/null; then

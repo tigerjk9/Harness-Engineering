@@ -11,7 +11,14 @@
 
 | 날짜 | 파일 | 추가된 규칙 | 발견 맥락 |
 |------|------|------------|-----------|
-| (규칙이 추가되면 /edu-harness가 여기에 자동 기록합니다) | | | |
+| 2026-04-04 | verify.sh | TypeScript any/async try-catch 누락/직접변이 패턴 MEDIUM 검사 3종 추가 | 하네스 엔지니어링 고도화 (2026 best practices) |
+| 2026-04-04 | system-check.sh | HARNESS_CHANGELOG/AGENTS.md/docs/verification-rubric/git 사용자 검사 추가 | 하네스 엔지니어링 고도화 |
+| 2026-04-04 | harness-checkpoint.sh | Level 2 자기복구 — git stash 체크포인트/롤백 스크립트 신규 생성 | 2026 harness self-repair hierarchy |
+| 2026-04-04 | harness-evolve.sh | AGENTS.md 변경도 HARNESS_CHANGELOG 자동 추적 | 하네스 엔지니어링 고도화 |
+| 2026-04-04 | settings.json | PreCommit 훅 추가 + UserPromptSubmit에 delta/checkpoint 상태 표시 | 하네스 엔지니어링 고도화 |
+| 2026-04-04 | CLAUDE.md | 자기 복구 계층(Level 1/2) + harness-checkpoint.sh 가이드 추가 | 하네스 엔지니어링 고도화 분석 |
+| 2026-04-04 | measure.sh | 3연속 delta=0 탐지 + 탐색 공간 고착 자동 경고 강화 | objective-loop 고착 방지 |
+| 2026-04-04 | harness-init/SKILL.md | 비교육용 범용 harness-init 스킬 신규 생성 | system-check 참조 스킬 실체화 |
 
 ---
 

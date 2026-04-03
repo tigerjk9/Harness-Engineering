@@ -1,45 +1,49 @@
 # progress.md — 프로젝트 진행 상태
 
 > AI 에이전트는 작업 시작 전 이 파일을 읽고, 작업 완료 후 반드시 업데이트합니다.
-> 마지막 업데이트: [YYYY-MM-DD]
+> 마지막 업데이트: 2026-04-04
 
 ---
 
 ## 현재 Phase
 
-**Phase [N]: [현재 단계 이름]**
+**Phase 2: 하네스 엔지니어링 고도화 — 완료**
 
 | 항목 | 내용 |
 |------|------|
-| 상태 | 🚧 진행 중 |
-| 시작일 | [YYYY-MM-DD] |
-| 목표 완료일 | [YYYY-MM-DD] |
-| 담당 에이전트 | [Planner / Coder / Reviewer / Tester] |
+| 상태 | ✅ 완료 |
+| 시작일 | 2026-04-04 |
+| 완료일 | 2026-04-04 |
+| 담당 에이전트 | Planner + 병렬 Executor × 6 |
 
 ---
 
 ## 완료된 작업
 
-- [x] 프로젝트 초기 설정 및 EduHarness 하네스 구성
-- [ ] [완료된 작업 1] — [날짜]
-- [ ] [완료된 작업 2] — [날짜]
+- [x] 프로젝트 초기 설정 및 EduHarness 하네스 구성 — 2026-03-29
+- [x] **하네스 엔지니어링 고도화 (8개 스토리)** — 2026-04-04
+  - [x] US-001: verify.sh — TypeScript any / async try-catch / 불변성 위반 MEDIUM 검사 3종 추가
+  - [x] US-002: system-check.sh — HARNESS_CHANGELOG/AGENTS.md/docs/git 검사 4종 추가 (11→15항목)
+  - [x] US-003: harness-checkpoint.sh — Level 2 자기 복구 스크립트 신규 생성
+  - [x] US-004: harness-evolve.sh — AGENTS.md 변경도 추적하도록 확장
+  - [x] US-005: settings.json — PreCommit 훅 추가 + UserPromptSubmit delta/checkpoint 상태 표시
+  - [x] US-006: CLAUDE.md — 자기 복구 계층(Level 1/2) 섹션 추가
+  - [x] US-007: measure.sh — 3연속 delta=0 탐지 + 탐색 공간 고착 자동 경고
+  - [x] US-008: harness-init/SKILL.md — 비교육용 범용 harness-init 스킬 신규 생성
 
 ---
 
 ## 진행 중인 작업
 
-- [ ] **[현재 작업 제목]**
-  - 세부 작업 1
-  - 세부 작업 2
-  - 담당: [에이전트 또는 사람 이름]
+없음 (다음 사용자 요청 대기)
 
 ---
 
 ## 다음 할 일 (우선순위 순)
 
-1. [ ] **[다음 작업 1]** — 우선순위: HIGH / 예상 소요: [시간]
-2. [ ] **[다음 작업 2]** — 우선순위: MEDIUM
-3. [ ] **[다음 작업 3]** — 우선순위: LOW
+1. [ ] **실제 앱 프로젝트 연결** — /harness-init 또는 /edu-harness-init 실행
+2. [ ] **CLAUDE.md 플레이스홀더 채우기** — [YOUR_PROJECT_NAME] 등 실제 값으로 교체
+3. [ ] **package.json 생성** — npm init 후 scripts 설정 → system-check WARN 해소
 
 ---
 

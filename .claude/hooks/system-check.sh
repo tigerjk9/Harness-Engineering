@@ -87,6 +87,28 @@ fi
   && check_pass ".husky/pre-commit" \
   || check_warn "pre-commit hook" "npx husky init 필요 (커밋 자동 검증 비활성화 상태)"
 
+# ── 하네스 진화 문서 ────────────────────────────────────────────────
+[ -f "HARNESS_CHANGELOG.md" ] \
+  && check_pass "HARNESS_CHANGELOG.md" \
+  || check_warn "HARNESS_CHANGELOG.md" "하네스 진화 기록 없음 — /edu-harness 완료 후 자동 생성"
+
+[ -f "AGENTS.md" ] \
+  && check_pass "AGENTS.md" \
+  || check_warn "AGENTS.md" "에이전트 역할 분리 문서 없음"
+
+[ -f "docs/verification-rubric.md" ] \
+  && check_pass "docs/verification-rubric.md" \
+  || check_warn "docs/verification-rubric.md" "검증 루브릭 없음 (docs/ 폴더 확인)"
+
+# ── git 사용자 설정 ───────────────────────────────────────────────
+GIT_NAME=$(git config user.name 2>/dev/null)
+GIT_EMAIL=$(git config user.email 2>/dev/null)
+if [ -n "$GIT_NAME" ] && [ -n "$GIT_EMAIL" ]; then
+  check_pass "git 사용자 설정 ($GIT_NAME)"
+else
+  check_warn "git 사용자 설정" "git config user.name/email 설정 필요"
+fi
+
 # ── verify.sh 실행 가능 여부 ──────────────────────────────────────
 if [ -f ".claude/skills/verify/verify.sh" ]; then
   bash .claude/skills/verify/verify.sh --check-only 2>/dev/null | grep -q "VERDICT=OK" \

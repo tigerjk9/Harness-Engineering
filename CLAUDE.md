@@ -45,6 +45,34 @@ AI 모델은 컨텍스트 창이 채워질수록 기능을 건너뛰거나 성�
 
 ---
 
+## 자기 복구 계층 (Self-Repair Hierarchy)
+
+AI 에이전트가 오류를 만났을 때 사용하는 2단계 복구 전략입니다.
+
+### Level 1 — 컨텍스트 재시도 (자동)
+오류 메시지를 읽고, 원인을 파악한 후 다른 전략으로 재시도합니다.
+→ `/execution-loop`이 이 레벨을 자동화합니다.
+
+### Level 2 — 체크포인트 롤백 (오염 감지 시)
+Level 1으로 해결되지 않거나 여러 파일이 예상과 다르게 변경된 경우:
+
+```bash
+# 현재 상태 확인
+bash .claude/hooks/harness-checkpoint.sh list
+
+# 마지막 안전한 지점으로 복원
+bash .claude/hooks/harness-checkpoint.sh restore
+```
+
+**체크포인트 생성 시점** (3개 이상 파일 변경 전 자동 실행):
+```bash
+bash .claude/hooks/harness-checkpoint.sh checkpoint "[기능명] 구현 전"
+```
+
+> **규칙**: execution-loop가 3회 연속 같은 오류를 반복하면 Level 2 롤백 후 재시작.
+
+---
+
 > ⚠️ **교육 앱이 아니라면 아래 섹션(교육 도메인 특수 규칙) 전체를 삭제하세요.**
 
 ---

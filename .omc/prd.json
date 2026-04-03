@@ -1,0 +1,109 @@
+{
+  "title": "EduHarness 하네스 엔지니어링 고도화",
+  "created": "2026-04-04",
+  "description": "YouTube 영상 및 2026년 하네스 엔지니어링 베스트 프랙티스를 분석하여 현재 프로젝트에 반영되지 않은 핵심 개선 사항들을 구현",
+  "stories": [
+    {
+      "id": "US-001",
+      "title": "verify.sh — TypeScript any/함수길이/try-catch/불변성 자동 탐지 추가",
+      "priority": 1,
+      "passes": false,
+      "acceptanceCriteria": [
+        "verify.sh quick 모드에서 TypeScript 'any' 사용 탐지 (': any' 또는 'as any') — MEDIUM 항목으로 추가",
+        "verify.sh quick 모드에서 50줄 초과 함수 탐지 — MEDIUM 항목으로 추가",
+        "verify.sh quick 모드에서 async 함수 내 try-catch 누락 탐지 — MEDIUM 항목으로 추가",
+        "verify.sh quick 모드에서 직접 변수 변이 패턴 탐지 (.push(, .splice(, .pop() 등) — MEDIUM 항목으로 추가",
+        "verify.sh 실행 후 출력이 기존 형식(CRITICAL_FAIL=N HIGH=N/N MEDIUM=N/N SCORE=N VERDICT=X)을 유지함",
+        "bash .claude/skills/verify/verify.sh 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-002",
+      "title": "system-check.sh — 필수 하네스 파일 검사 항목 강화",
+      "priority": 2,
+      "passes": false,
+      "acceptanceCriteria": [
+        "HARNESS_CHANGELOG.md 존재 여부 검사 추가 (없으면 WARN)",
+        "AGENTS.md 존재 여부 검사 추가 (없으면 WARN)",
+        "docs/verification-rubric.md 존재 여부 검사 추가 (없으면 WARN)",
+        "git 사용자 설정(name/email) 검사 추가 (없으면 WARN)",
+        "bash .claude/hooks/system-check.sh 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-003",
+      "title": "harness-checkpoint.sh — Level 2 자기 복구 (롤백 체크포인트)",
+      "priority": 3,
+      "passes": false,
+      "acceptanceCriteria": [
+        "새 스크립트 .claude/hooks/harness-checkpoint.sh 생성",
+        "checkpoint 명령: 현재 git 상태를 임시 브랜치나 stash로 저장",
+        "restore 명령: 마지막 체크포인트로 롤백",
+        "list 명령: 저장된 체크포인트 목록 표시",
+        "체크포인트 생성 시 .harness-checkpoint 파일에 ID와 타임스탬프 기록",
+        "bash .claude/hooks/harness-checkpoint.sh checkpoint 'test' 실행 시 성공",
+        "bash .claude/hooks/harness-checkpoint.sh list 실행 시 목록 출력"
+      ]
+    },
+    {
+      "id": "US-004",
+      "title": "harness-evolve.sh — AGENTS.md 변경도 추적하도록 확장",
+      "priority": 4,
+      "passes": false,
+      "acceptanceCriteria": [
+        "AGENTS.md 변경도 HARNESS_CHANGELOG.md에 자동 기록",
+        "수동 모드(--manual)에서 CLAUDE.md + AGENTS.md 양쪽 변경 탐지",
+        "자동 모드에서 staged CLAUDE.md + AGENTS.md 양쪽 변경 탐지",
+        "bash .claude/hooks/harness-evolve.sh --manual 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-005",
+      "title": "settings.json — 훅 보강 (PreCommit + 더 나은 상태 표시)",
+      "priority": 5,
+      "passes": false,
+      "acceptanceCriteria": [
+        "PreCommit 훅 추가: 커밋 전 verify.sh --full 실행하여 REJECTED면 경고 출력",
+        "UserPromptSubmit 훅: objective-loop-log.md 마지막 delta도 표시",
+        "PostToolUse 훅: Bash 도구에도 verify 결과 표시 (현재는 Write|Edit만)",
+        ".claude/settings.json 유효한 JSON 형식 유지"
+      ]
+    },
+    {
+      "id": "US-006",
+      "title": "CLAUDE.md — Level 2 자기 복구 패턴 및 git 체크포인트 규칙 추가",
+      "priority": 6,
+      "passes": false,
+      "acceptanceCriteria": [
+        "CLAUDE.md에 '자기 복구 계층' 섹션 추가 (Level 1: 컨텍스트 재시도, Level 2: 체크포인트 롤백)",
+        "CLAUDE.md에 harness-checkpoint.sh 사용 가이드 추가",
+        "기존 CLAUDE.md 규칙 구조 유지 (형식 파괴 없음)",
+        "HARNESS_CHANGELOG.md에 변경 기록 추가"
+      ]
+    },
+    {
+      "id": "US-007",
+      "title": "measure.sh — 델타 트렌드 분석 및 3연속 정체 자동 탐지",
+      "priority": 7,
+      "passes": false,
+      "acceptanceCriteria": [
+        "measure.sh check 실행 시 최근 3회 delta 히스토리 요약 표시",
+        "3회 연속 delta=0이면 '탐색 공간 전환 필요' 명시적 경고 출력",
+        "objective-loop-log.md의 이전 기록 파싱하여 트렌드 계산",
+        "bash .claude/skills/objective-loop/measure.sh check 'test' 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-008",
+      "title": "harness (범용) skill 추가 — 비교육 앱용 기본 하네스 진입점",
+      "priority": 8,
+      "passes": false,
+      "acceptanceCriteria": [
+        ".claude/skills/harness-init/SKILL.md 생성 — 비교육 앱용 초기화",
+        "system-check.sh의 'harness-init 먼저 실행' 안내가 이 스킬을 가리킴",
+        "2개 질문만: 프로젝트명, 교육앱 여부(Y→edu-harness-init 실행, N→범용 CLAUDE.md)",
+        "SKILL.md 파일이 완전한 사용 가이드 포함"
+      ]
+    }
+  ]
+}

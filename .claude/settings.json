@@ -1,5 +1,15 @@
 {
   "hooks": {
+    "PreCommit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "RESULT=$(bash .claude/skills/verify/verify.sh --full 2>/dev/null | tail -1); VERDICT=$(echo \"$RESULT\" | grep -oE 'VERDICT=[A-Z]+' | cut -d= -f2); if [ \"$VERDICT\" = 'REJECTED' ]; then echo \"  ⛔ pre-commit harness: $RESULT — REJECTED: 커밋 전 문제를 수정하세요\"; else echo \"  ✅ pre-commit harness: $RESULT\"; fi"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
@@ -16,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; LOOP=$(cat .execution-loop-state 2>/dev/null || echo '없음'); echo \"  💡 세션 시작: progress.md → architecture.md 순으로 읽은 후 시작하세요\"; echo \"  📍 현재 루프 상태: $LOOP\""
+            "command": "bash .claude/hooks/system-check.sh --brief 2>/dev/null; LOOP=$(cat .execution-loop-state 2>/dev/null || echo '없음'); DELTA=$(tail -3 objective-loop-log.md 2>/dev/null | grep -oE 'delta: [+\\-][0-9]+' | tail -1 || echo '없음'); CHECKPOINT=$(tail -1 .harness-checkpoint 2>/dev/null | cut -d'|' -f3 | tr -d ' ' || echo '없음'); echo \"  💡 세션 시작: progress.md → architecture.md 순으로 읽은 후 시작하세요\"; echo \"  📍 루프: $LOOP | 마지막 delta: $DELTA | 체크포인트: $CHECKPOINT\""
           }
         ]
       }
