@@ -37,6 +37,23 @@ description: '만들어줘', '구현해줘', '추가해줘', '설계해줘'가 �
 
 각 단계 출력 파일(`_workspace/0N_*.md`)은 단계 7 완료까지 삭제하지 않습니다.
 이전 단계 아티팩트는 다음 단계에서 참조 가능해야 하며, 새 세션에서 재개 시 상태 복원 근거가 됩니다.
+각 단계 완료 시 `feature_list.json` 해당 항목 `passes: true` 표시 (passes 필드만, 다른 필드 변경 금지).
+
+---
+
+## 단계 0.5 — feature_list.json 상태 확인 (SYSTEM CHECK 전)
+
+```bash
+cat feature_list.json 2>/dev/null || echo "feature_list.json 없음 — 단계 0으로 진행"
+```
+
+**feature_list.json 불변성 규칙**:
+- `passes` 필드만 수정 가능 (`true` / `false`)
+- 항목 내용(title, id, acceptanceCriteria) 임의 변경 금지
+- 항목 순서 변경 금지
+- 각 단계 완료 시 해당 항목 `passes: true` 표시 (다른 필드 변경 없이)
+
+feature_list.json 규칙 위반 시 → 즉시 중단, 원본 복원 후 재시작
 
 ---
 

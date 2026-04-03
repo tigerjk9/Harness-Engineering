@@ -19,13 +19,15 @@
 
 # ── 모드 및 경로 파싱 ─────────────────────────────────────────────
 MODE="quick"
+SELF_CRITIQUE=false
 SRC="src"
 for _arg in "$@"; do
   case "$_arg" in
-    --full)       MODE="full" ;;
-    --check-only) echo "VERDICT=OK" && exit 0 ;;  # system-check.sh용: 실행 가능 여부만 확인
-    --*)          ;;
-    *)            SRC="$_arg" ;;
+    --full)           MODE="full" ;;
+    --self-critique)  SELF_CRITIQUE=true ;;
+    --check-only)     echo "VERDICT=OK" && exit 0 ;;  # system-check.sh용: 실행 가능 여부만 확인
+    --*)              ;;
+    *)                SRC="$_arg" ;;
   esac
 done
 C_FAIL=0; H_PASS=0; H_TOTAL=0; M_PASS=0; M_TOTAL=0
@@ -251,6 +253,37 @@ if   [ $C_FAIL -gt 0 ];   then VERDICT=REJECTED
 elif [ $H_RATE -lt 100 ]; then VERDICT=REJECTED
 elif [ $M_RATE -lt 80 ];  then VERDICT=CONDITIONAL
 else VERDICT=APPROVED
+fi
+
+# ── [--self-critique] 헌법적 자기비판 (MEDIUM 항목으로 추가) ─────────
+if $SELF_CRITIQUE && [ -n "$ALL_FILES" ]; then
+  # SC1: 직접 변이 패턴 (push/splice/pop/sort)
+  M_TOTAL=$((M_TOTAL + 1))
+  SC_MUTATE=$(echo "$ALL_FILES" | xargs grep -l "\.push(\|\.splice(\|\.pop()\|\.sort(" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|mock")
+  [ -z "$SC_MUTATE" ] && M_PASS=$((M_PASS + 1))
+
+  # SC2: TypeScript any 사용 (자기비판 전용 추가 검사)
+  M_TOTAL=$((M_TOTAL + 1))
+  SC_ANY=$(echo "$ALL_FILES" | xargs grep -l ": any\b\|as any\b" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|example\|mock")
+  [ -z "$SC_ANY" ] && M_PASS=$((M_PASS + 1))
+
+  # SC3: 800줄 초과 파일 (자기비판 전용 엄격 검사)
+  M_TOTAL=$((M_TOTAL + 1))
+  SC_LONG=$(echo "$ALL_FILES" | xargs wc -l 2>/dev/null \
+    | awk '$1 > 800 {print $2}' | grep -v "total")
+  [ -z "$SC_LONG" ] && M_PASS=$((M_PASS + 1))
+
+  # 점수 재계산
+  [ $M_TOTAL -gt 0 ] && M_RATE=$((M_PASS * 100 / M_TOTAL)) || M_RATE=100
+  M_CONTRIB=$([ $M_TOTAL -gt 0 ] && echo $((M_PASS * 30 / M_TOTAL)) || echo 30)
+  SCORE=$((C_CONTRIB + H_CONTRIB + M_CONTRIB))
+  if   [ $C_FAIL -gt 0 ];   then VERDICT=REJECTED
+  elif [ $H_RATE -lt 100 ]; then VERDICT=REJECTED
+  elif [ $M_RATE -lt 80 ];  then VERDICT=CONDITIONAL
+  else VERDICT=APPROVED
+  fi
 fi
 
 echo "CRITICAL_FAIL=${C_FAIL} HIGH=${H_PASS}/${H_TOTAL} MEDIUM=${M_PASS}/${M_TOTAL} SCORE=${SCORE} VERDICT=${VERDICT}"

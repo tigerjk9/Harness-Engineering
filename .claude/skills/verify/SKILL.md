@@ -13,6 +13,22 @@ description: 기능 구현이 완료되거나 '/verify 기능명'이 입력되�
 
 ## 실행 순서
 
+### Step 0.5 — 헌법적 자기비판 (구현 직후 실행)
+
+> Constitutional AI at Harness Level: 구현 완료 직후, verify.sh 실행 전에 CLAUDE.md 원칙 목록을 대조해 자가 점검합니다.
+
+**자기비판 체크리스트** (모두 통과해야 Step 1 진행):
+
+```
+□ 불변성: 객체·배열 직접 수정(push/splice/sort) 없음
+□ TypeScript any: `: any` 또는 `as any` 사용 없음
+□ try-catch 완비: async 함수마다 try-catch 존재
+□ 파일 800줄 이하: 변경한 모든 파일이 800줄 미만
+□ 직접 변이 없음: 원본 객체/배열 mutate 없이 spread로 새 객체 생성
+```
+
+체크리스트 항목 1개라도 실패 시 → 코드 수정 후 Step 0.5 재실행 (Step 1 진행 불가)
+
 ### Step 0 — 양쪽 동시 읽기 (필수)
 
 API route 파일과 프론트 훅 파일을 **동시에** 열어 shape 교차 확인.

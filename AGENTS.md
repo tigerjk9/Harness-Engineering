@@ -10,10 +10,12 @@
 | 역할 | 핵심 책임 | 접근 권한 | 권장 모델 |
 |------|-----------|-----------|-----------|
 | Planner | 구현 계획 수립, 위험 식별, 작업 분해 | 전체 읽기 (수정 불가) | opus |
-| Coder | 코드 작성·수정, 테스트 함께 생성 | `src/`, `tests/`, `public/` | sonnet |
+| Coder (Generator) | 코드 작성·수정, 테스트 함께 생성 | `src/`, `tests/`, `public/` | sonnet |
+| **Evaluator** | **Generator 출력을 독립 컨텍스트에서 검증** | 읽기 전용 | **sonnet** |
 | Reviewer | 코드 품질·보안·접근성 검토 | 읽기 전용 | opus |
 | Tester | 테스트 전략 수립, 단위·통합 테스트 작성 | `tests/` 전담 | sonnet |
 | **Pedagogy Reviewer** | **교육학적 적절성 검토** | 읽기 전용 | **opus** |
+| **Harness Auditor** | **분기별 하네스 가정 감사, 불필요 컴포넌트 식별** | 읽기 전용 | **opus** |
 
 > **모델 라우팅 원칙**: 분석·판단 역할(Planner, Reviewer, Pedagogy Reviewer)은 opus를, 구현·생성 역할(Coder, Tester)은 sonnet을 사용합니다.
 > 고비용 추론을 가장 유능한 모델에 집중시키고, 반복·생성 작업은 빠른 모델로 처리합니다.
@@ -82,6 +84,44 @@
 
 ---
 
+## Evaluator
+
+**책임**: Generator(Coder)의 출력을 **독립 컨텍스트**에서 검증 — 코드 직접 수정 불가
+
+> **Goodhart's Law 방어**: Generator가 자신의 출력을 검토하면 자화자찬 편향이 작동합니다. Evaluator는 반드시 별도 컨텍스트에서 실행합니다.
+
+**핵심 원칙**:
+- Generator가 생성한 코드를 **새로운 호출(별도 컨텍스트)**에서 독립적으로 검증
+- "구현을 도왔으므로 작동할 것" 가정 금지 — 실제 실행 증거만 인정
+- verify.sh 결과, 테스트 출력, 빌드 로그를 직접 실행·확인
+
+**Generator-Evaluator 공유 파일 통신 패턴**:
+```
+Generator 완료 → _workspace/03_coder_implementation.md (변경 파일 목록 기록)
+                              ↓
+Evaluator 읽기 → 목록에서 각 파일 독립 검토 + verify.sh 실행
+                              ↓
+Evaluator 결과 → _workspace/evaluator_report.md (PASS/FAIL + 근거)
+```
+
+**검증 기준**: verify.sh VERDICT + 스프린트 계약의 각 조건 체크리스트 대조
+
+---
+
+## Harness Auditor
+
+**책임**: 분기별 하네스 가정 감사 — 하네스 컴포넌트가 여전히 유효한지 검토
+
+> 하네스도 부패합니다. 6개월 전에 필요했던 규칙이 지금은 불필요할 수 있고, 모델이 진화하면서 일부 verify.sh 패턴이 실제 코드를 잡지 못할 수 있습니다.
+
+**감사 주기**: 분기 1회 (또는 대규모 모델 업그레이드 후)
+
+**감사 기준**: `docs/harness-audit.md` 체크리스트 참조
+
+**권장 실행**: `/edu-harness` 작업 흐름 완료 후, 별도 세션에서 독립 실행
+
+---
+
 ## Pedagogy Reviewer
 
 **책임**: 구현된 기능의 교육학적 적절성 검토 — 코드 수정 불가
@@ -138,16 +178,20 @@ UI 컴포넌트  ↔  테스트 파일
 ```
 1. [Planner]           계획 수립 → 사용자 승인
            ↓
-2. [Coder]             구현 (테스트 포함)
+2. [Coder / Generator] 구현 (테스트 포함) → _workspace/03_coder_implementation.md
            ↓
-3. [Pedagogy Reviewer] 교육학적 적절성 검토
+3. [Evaluator]         독립 컨텍스트에서 검증 → _workspace/evaluator_report.md
+           ↓ (FAIL이면 2번으로 복귀)
+4. [Pedagogy Reviewer] 교육학적 적절성 검토
            ↓
-4. [Reviewer]          코드 품질·보안·접근성 검토
+5. [Reviewer]          코드 품질·보안·접근성 검토
            ↓
-5. [Coder]             리뷰 반영 수정
+6. [Coder]             리뷰 반영 수정
            ↓
-6. [Tester]            추가 테스트 강화 (필요 시)
+7. [Tester]            추가 테스트 강화 (필요 시)
 ```
+
+> **분기별**: `[Harness Auditor]` → `docs/harness-audit.md` 체크리스트 실행
 
 > 전체 워크플로우 자동 실행: `/edu-harness`
 > 합격 기준까지 자동 반복: `/execution-loop` | 수치 목표 달성까지: `/objective-loop`

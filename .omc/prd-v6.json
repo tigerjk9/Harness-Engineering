@@ -1,0 +1,101 @@
+{
+  "title": "EduHarness 하네스 엔지니어링 고도화 v6.0 — 오토 리서치 기반",
+  "created": "2026-04-04",
+  "completed": "2026-04-04",
+  "architectVerdict": "APPROVED",
+  "researchBasis": [
+    "Anthropic Engineering Blog: effective-harnesses-for-long-running-agents",
+    "Zylos Research: AI Agent Context Compression Strategies 2026",
+    "arXiv 2603.06847: Characterizing Faults in Agentic AI",
+    "IMPACT Framework: Intent-Memory-Planning-Authority-Control-Tools",
+    "OWASP Top 10 for Agentic Applications 2026",
+    "LLM Readiness Harness: Evaluation, Observability, CI Gates"
+  ],
+  "stories": [
+    {
+      "id": "US-101",
+      "title": "progress.md — 앵커 4개 필드 구조화 (Anchored Context Transfer)",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "progress.md 템플릿에 '## 컨텍스트 앵커' 섹션 추가 — intent/changes_made/decisions_taken/next_steps 4개 필드 명시",
+        "CLAUDE.md 'Context Anxiety 방어' 섹션에 앵커 작성 의무화 규칙 추가 (컨텍스트 70% 도달 시 앵커 업데이트 후 세션 전환)",
+        "progress.md에 실제 앵커 예시 1개 포함 (진짜 작성 방법을 보여주는 예시)",
+        "CLAUDE.md '작업 시작 전 필수 절차'에 progress.md 앵커 섹션 읽기 단계 추가"
+      ]
+    },
+    {
+      "id": "US-102",
+      "title": "CLAUDE.md — 도구 위험 분류 + 단일 기능 세션 경계 규칙",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "CLAUDE.md '금지 행동' 테이블에 위험 분류 열 추가: Read(자동) / Write(확인 권장) / Irreversible(사용자 승인 필수)",
+        "CLAUDE.md에 '단일 기능 세션 경계' 규칙 추가: 세션당 1개 기능만 완성, 완성 기준 = 테스트 통과 + git commit + progress 업데이트",
+        "CLAUDE.md에 '세션 시작 6단계 의식' 추가: pwd → git log --oneline -5 → progress.md 앵커 → feature 목록 → .execution-loop-state → verify.sh 결과",
+        "기존 CLAUDE.md 구조 유지 (형식 파괴 없음)"
+      ]
+    },
+    {
+      "id": "US-103",
+      "title": "execution-loop SKILL.md — 오류 유형 3분류 + 계층적 복구 전략 추가",
+      "priority": 3,
+      "passes": true,
+      "acceptanceCriteria": [
+        "execution-loop SKILL.md에 '오류 유형 분류' 섹션 추가: Parse Error / Tool Error / Logic Error 3종",
+        "각 오류 유형마다 계층적 복구 전략 명시: Level1(재시도) → Level2(체크포인트 롤백) → Level3(규칙 폴백) → Level4(사용자 에스컬레이션)",
+        "오류 유형 판별 기준(증상 패턴) 표 포함 — 어떤 증상이 어떤 유형인지 매핑",
+        "기존 실행 루프 구조 유지"
+      ]
+    },
+    {
+      "id": "US-104",
+      "title": "AGENTS.md — Generator-Evaluator 패턴 + 하네스 감사 역할 추가",
+      "priority": 4,
+      "passes": true,
+      "acceptanceCriteria": [
+        "AGENTS.md에 'Evaluator' 역할 추가: Generator(Coder)의 출력을 독립 컨텍스트에서 검증하는 역할, Goodhart's Law 방어",
+        "AGENTS.md에 'Harness Auditor' 역할 추가: 분기별 하네스 가정 감사 담당, 불필요해진 컴포넌트 식별",
+        "기존 5개 역할 구조 유지, 권장 작업 흐름에 Evaluator 삽입 위치 표시",
+        "Generator-Evaluator 공유 파일 통신 패턴 설명 포함"
+      ]
+    },
+    {
+      "id": "US-105",
+      "title": "verify SKILL.md + verify.sh — 헌법적 자기비판 단계 추가",
+      "priority": 5,
+      "passes": true,
+      "acceptanceCriteria": [
+        "verify SKILL.md에 'Step 0.5 — 헌법적 자기비판' 단계 추가: 구현 직후 CLAUDE.md 원칙 목록 대조 자가 점검",
+        "자기비판 체크리스트 포함: 불변성 / TypeScript any 없음 / try-catch 완비 / 파일 800줄 이하 / 직접 변이 없음",
+        "verify.sh에 --self-critique 플래그 추가: 자기비판 결과를 MEDIUM 항목으로 추가 (grep 기반)",
+        "bash verify.sh 실행 시 오류 없이 완료"
+      ]
+    },
+    {
+      "id": "US-106",
+      "title": "docs/harness-audit.md 신규 — 분기별 하네스 감사 체크리스트",
+      "priority": 6,
+      "passes": true,
+      "acceptanceCriteria": [
+        "docs/harness-audit.md 파일 생성",
+        "감사 체크리스트 포함: 각 하네스 컴포넌트 → '현재 모델이 없이도 할 수 있는가?' 테스트 항목",
+        "Stress-test 섹션: verify.sh grep 패턴이 현재 모델 코드 스타일을 잡는지 확인 방법",
+        "With/Without 효과 측정 방법: measure.sh baseline → 구현 → check → delta 기록",
+        "감사 빈도 및 담당자(Harness Auditor) 명시"
+      ]
+    },
+    {
+      "id": "US-107",
+      "title": "edu-harness SKILL.md — feature_list.json 불변성 규칙 + 단계 0 강화",
+      "priority": 7,
+      "passes": true,
+      "acceptanceCriteria": [
+        "edu-harness SKILL.md '단계 0 — SYSTEM CHECK' 전에 'feature_list.json 상태 확인' 단계 추가",
+        "feature_list.json 규칙 명시: passes 필드만 수정 가능, 항목 내용/순서 임의 변경 금지",
+        "_workspace/ 아티팩트 규칙에 '각 단계 완료 시 feature_list.json 해당 항목 passes:true 표시' 추가",
+        "기존 edu-harness 단계 번호 유지 (새 단계는 0.5 또는 별도 섹션)"
+      ]
+    }
+  ]
+}
