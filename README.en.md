@@ -40,7 +40,8 @@ Click **"Use this template"** on GitHub → Create new repository
 ```
 
 Just 2 questions (project name + education app Y/N) → the rest is auto-detected from `package.json` and inferred at first use.
-> `Lazy-fill`: Tech stack and user descriptions are read automatically from your first `/edu-harness` request. No manual editing needed.
+
+> **Lazy-fill**: Tech stack and user descriptions are read automatically from your first `/edu-harness` request. No manual editing needed.
 
 ### Step 3: Build your first feature
 
@@ -53,9 +54,30 @@ Just 2 questions (project name + education app Y/N) → the rest is auto-detecte
 
 ---
 
-## Try It Now
+## The /edu-harness 7-Stage Cycle
 
-Copy and paste to get started immediately.
+That one line automatically runs all 7 stages below.
+
+```
+Plan → Agree on Done → Edu Design → Build → Pedagogy Review → Verify → Harness Evolution
+```
+
+| Stage | Key Action | Why |
+|-------|-----------|-----|
+| 1. Plan | Identify affected files and risks | Blueprint before writing code |
+| 2. Agree on Done | Sprint contract — define "complete" explicitly | Align AI and human expectations upfront |
+| 3. Edu Design | Decide formative/summative, design feedback messages | Ensure code serves educational purpose |
+| 4. Build | Write code with unit tests + accessibility tests | Actual implementation |
+| 5. Pedagogy Review | Cross-check API↔frontend shape | Verify no answer leakage, retry policies |
+| 6. Verify | `verify.sh` 6-dimension automated scoring | Score-based APPROVED/REJECTED |
+| 7. Harness Evolution | Auto-accumulate rules in `CLAUDE.md` | AI quality improves each loop |
+
+With each loop, rules accumulate in `HARNESS_CHANGELOG.md`, and rubric gaps are surfaced for review.
+**Code changes are delegated to AI; rubric changes require human approval** — this prevents the Goodhart's Law trap.
+
+---
+
+## Try It Now
 
 ```
 # Quiz (formative assessment)
@@ -83,14 +105,13 @@ Copy and paste to get started immediately.
 
 The base structure of EduHarness (constitution, verification, execution loop) works for any project.
 
-When `/edu-harness-init` detects the project is not an education app, it automatically removes the education domain section from `CLAUDE.md`.
+When `/edu-harness-init` asks Q2 and you answer N, it automatically removes the education domain section from `CLAUDE.md`.
 The `[EDU-DOMAIN]` checks in `verify.sh` auto-pass when no quiz/feedback components are found — no extra configuration needed.
 
 ```
-# Example for a non-education project
 /edu-harness-init
-# → "No education app features detected. Remove edu domain section?" → Y
-# → Removes rules 1-5 from CLAUDE.md, keeps all coding rules and verification structure
+# Q2: Is this an education app? → N
+# → Removes edu domain section from CLAUDE.md, keeps all coding rules and verification structure
 ```
 
 ---
@@ -100,24 +121,36 @@ The `[EDU-DOMAIN]` checks in `verify.sh` auto-pass when no quiz/feedback compone
 ```
 edu-harness/
 ├── CLAUDE.md              # 📜 Constitution — core AI rules (project purpose + coding rules + edu domain)
-├── AGENTS.md              # 📜 Constitution — agent role separation + workflow
+├── AGENTS.md              # 📜 Constitution — 7 agent roles + tool permission matrix
 ├── architecture.md        # 🏗 Work Structure — tech stack, directories, data model
-├── progress.md            # 🏗 Work Structure — current state, next steps, issues
+├── progress.md            # 🏗 Work Structure — current state, next steps, context anchor
 ├── HARNESS_CHANGELOG.md   # Harness evolution history (auto-updated on commit)
+├── LICENSE                # MIT License
 │
 ├── docs/
 │   ├── example-walkthrough.md   # ⭐ Hands-on walkthrough (start here)
 │   ├── education-principles.md  # Educational pedagogy reference
-│   ├── verification-rubric.md   # 6-dimension verification rubric
+│   ├── verification-rubric.md   # 6-dimension verification rubric (Dim1–Dim6)
+│   ├── decision-log.md          # Architecture Decision Records (ADR)
+│   ├── harness-audit.md         # Quarterly harness audit checklist
+│   ├── harness-audit-results.md # Audit result history
 │   ├── wcag-checklist.md        # WCAG accessibility checklist
-│   └── harness-guide.en.md      # Detailed harness guide
+│   ├── harness-guide.ko.md      # Detailed harness guide (Korean)
+│   └── harness-guide.en.md      # Detailed harness guide (English)
 │
-└── .claude/skills/
-    ├── edu-harness/       # 🎓 Main entry point (plan→verify→harness evolution full cycle)
-    ├── edu-harness-init/  # 🔧 Harness initialization automation
-    ├── execution-loop/    # 🔄 Repeat until passing (internal)
-    ├── objective-loop/    # 🎯 Repeat until score target + harness evolution (internal)
-    └── verify/            # ✅ 6-dimension verification (internal)
+├── .claude/
+│   ├── hooks/
+│   │   ├── harness-health.sh    # 🩺 Full status dashboard
+│   │   ├── system-check.sh      # 🔧 Environment check (19 items)
+│   │   ├── harness-checkpoint.sh # 💾 Level 2 self-repair (git stash)
+│   │   └── harness-evolve.sh    # 📝 Auto-log rule changes
+│   └── skills/
+│       ├── edu-harness/         # 🎓 Main entry point (7-stage cycle)
+│       ├── edu-harness-init/    # 🔧 Harness initialization (2 questions)
+│       ├── harness-init/        # 🔧 Non-education app initialization
+│       ├── execution-loop/      # 🔄 Repeat until passing
+│       ├── objective-loop/      # 🎯 Repeat until score target + harness evolution
+│       └── verify/              # ✅ 6-dimension verification
 ```
 
 ---
@@ -125,12 +158,22 @@ edu-harness/
 ## Skill Catalog
 
 | Skill | Purpose | When to use |
-|------|------|-----------|
-| `/edu-harness-init` | Automate initial harness setup | Right after clone |
-| `/edu-harness` | Full feature implementation workflow (with pedagogy review) | Every feature |
-| `/execution-loop` | Auto-repeat until passing criteria met | Verification loop |
-| `/objective-loop` | Auto-repeat until score target + harness evolution | Score-based improvement |
+|-------|---------|-------------|
+| `/edu-harness-init` | Initialize harness (education or general app) | Once after clone |
+| `/harness-init` | Initialize for non-education app | Once after clone (non-edu) |
+| `/edu-harness` | 7-stage feature implementation workflow | Every feature |
+| `/execution-loop` | Auto-repeat until passing criteria met | When REJECTED |
+| `/objective-loop` | Auto-repeat until score target + harness evolution | Score improvement |
 | `/verify` | Measure 6-dimension quality score | Standalone check |
+
+### Key Commands
+
+```bash
+bash .claude/hooks/harness-health.sh          # 🩺 Full status at a glance
+bash .claude/skills/verify/verify.sh          # 📊 Code quality score (fast)
+bash .claude/skills/verify/verify.sh --full   # 📊 Full check (lint+tsc+test)
+bash .claude/hooks/system-check.sh            # 🔧 Environment diagnosis
+```
 
 ---
 
