@@ -71,7 +71,7 @@
 
 ## 다음 할 일 (우선순위 순)
 
-1. [ ] **실제 앱 프로젝트 연결** — /harness-init 또는 /edu-harness-init 실행
+1. [ ] **실제 앱 프로젝트 연결** — /edu-harness-init 실행
 2. [ ] **CLAUDE.md 플레이스홀더 채우기** — [YOUR_PROJECT_NAME] 등 실제 값으로 교체
 3. [ ] **package.json 생성** — npm init 후 scripts 설정 → system-check WARN 해소
 

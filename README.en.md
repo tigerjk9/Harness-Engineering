@@ -147,7 +147,6 @@ edu-harness/
 │   └── skills/
 │       ├── edu-harness/         # 🎓 Main entry point (7-stage cycle)
 │       ├── edu-harness-init/    # 🔧 Harness initialization (2 questions)
-│       ├── harness-init/        # 🔧 Non-education app initialization
 │       ├── execution-loop/      # 🔄 Repeat until passing
 │       ├── objective-loop/      # 🎯 Repeat until score target + harness evolution
 │       └── verify/              # ✅ 6-dimension verification
@@ -160,7 +159,6 @@ edu-harness/
 | Skill | Purpose | When to use |
 |-------|---------|-------------|
 | `/edu-harness-init` | Initialize harness (education or general app) | Once after clone |
-| `/harness-init` | Initialize for non-education app | Once after clone (non-edu) |
 | `/edu-harness` | 7-stage feature implementation workflow | Every feature |
 | `/execution-loop` | Auto-repeat until passing criteria met | When REJECTED |
 | `/objective-loop` | Auto-repeat until score target + harness evolution | Score improvement |

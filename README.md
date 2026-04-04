@@ -146,8 +146,7 @@ edu-harness/
 │   │   └── harness-evolve.sh    # 📝 규칙 변경 자동 기록
 │   └── skills/
 │       ├── edu-harness/         # 🎓 메인 진입점 (7단계 사이클)
-│       ├── edu-harness-init/    # 🔧 하네스 초기화 (2질문)
-│       ├── harness-init/        # 🔧 비교육용 초기화
+│       ├── edu-harness-init/    # 🔧 하네스 초기화 (2질문, 교육/범용 모두)
 │       ├── execution-loop/      # 🔄 합격 기준까지 반복
 │       ├── objective-loop/      # 🎯 수치 목표까지 반복 + 하네스 진화
 │       └── verify/              # ✅ 6차원 검증
@@ -159,8 +158,7 @@ edu-harness/
 
 | 스킬 | 용도 | 사용 시점 |
 |------|------|-----------|
-| `/edu-harness-init` | 하네스 초기 설정 (교육/범용 앱) | 클론 직후 1회 |
-| `/harness-init` | 비교육 앱 초기화 | 클론 직후 (비교육) |
+| `/edu-harness-init` | 하네스 초기 설정 (교육/범용 앱 모두) | 클론 직후 1회 |
 | `/edu-harness` | 7단계 기능 구현 워크플로우 | 모든 기능 구현 |
 | `/execution-loop` | 합격 기준 충족까지 자동 반복 | REJECTED 시 |
 | `/objective-loop` | 수치 목표 달성 + 하네스 진화 | 점수 개선 목표 시 |
