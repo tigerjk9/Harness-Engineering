@@ -1,0 +1,46 @@
+{
+  "title": "EduHarness 하네스 엔지니어링 고도화 v9.0 — 온보딩 + 도구 권한 매트릭스",
+  "created": "2026-04-04",
+  "completed": "2026-04-04",
+  "architectVerdict": "APPROVED",
+  "researchBasis": [
+    "harness-init SKILL.md에 v6~v8 신규 도구 미반영",
+    "AGENTS.md 도구 권한 매트릭스 부재 — 역할별 허용/금지 도구 불명확",
+    "system-check.sh에 decision-log.md 존재 여부 미검사"
+  ],
+  "stories": [
+    {
+      "id": "US-401",
+      "title": "harness-init SKILL.md — 신규 도구 참조 + 완료 보고에 harness-health.sh 추가",
+      "priority": 1,
+      "passes": true,
+      "acceptanceCriteria": [
+        "harness-init 완료 보고에 'bash .claude/hooks/harness-health.sh' 첫 실행 단계 추가",
+        "참고 파일 테이블에 harness-health.sh / decision-log.md 항목 추가",
+        "기존 6단계 구조 유지"
+      ]
+    },
+    {
+      "id": "US-402",
+      "title": "AGENTS.md — 역할별 도구 권한 매트릭스 추가",
+      "priority": 2,
+      "passes": true,
+      "acceptanceCriteria": [
+        "AGENTS.md에 '도구 권한 매트릭스' 테이블 추가: 각 역할 × Read/Write/Irreversible 허용 여부",
+        "Evaluator는 Read 전용(Write/Irreversible 금지), Coder는 Write 허용, Harness Auditor는 Read 전용 명시",
+        "CLAUDE.md 금지 행동 위험 분류와 일관성 유지"
+      ]
+    },
+    {
+      "id": "US-403",
+      "title": "system-check.sh — decision-log.md 존재 여부 검사 추가 (18→19항목)",
+      "priority": 3,
+      "passes": true,
+      "acceptanceCriteria": [
+        "docs/decision-log.md 파일 존재 여부 WARN 검사 추가",
+        "검사 항목 18 → 19개로 증가",
+        "기존 검사 항목 유지"
+      ]
+    }
+  ]
+}

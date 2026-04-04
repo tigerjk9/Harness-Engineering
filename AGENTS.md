@@ -173,6 +173,25 @@ UI 컴포넌트  ↔  테스트 파일
 
 ---
 
+## 도구 권한 매트릭스
+
+> CLAUDE.md 금지 행동의 위험 분류(Read/Write/Irreversible)를 역할별로 적용합니다.
+
+| 역할 | Read (자동) | Write (확인 권장) | Irreversible (승인 필수) |
+|------|------------|-------------------|------------------------|
+| Planner | ✅ 허용 | ❌ 금지 | ❌ 금지 |
+| Coder (Generator) | ✅ 허용 | ✅ 허용 | ❌ 금지 |
+| **Evaluator** | ✅ 허용 | ❌ **금지** | ❌ **금지** |
+| Reviewer | ✅ 허용 | ❌ 금지 | ❌ 금지 |
+| Tester | ✅ 허용 | ✅ (`tests/` 전담) | ❌ 금지 |
+| Pedagogy Reviewer | ✅ 허용 | ❌ 금지 | ❌ 금지 |
+| **Harness Auditor** | ✅ 허용 | ❌ **금지** | ❌ **금지** |
+
+> **Evaluator와 Harness Auditor는 읽기 전용입니다.** 코드를 수정하면 Goodhart's Law 문제가 발생합니다.
+> Write 권한이 필요한 변경은 반드시 Coder 역할로 전환 후 진행합니다.
+
+---
+
 ## 권장 작업 흐름
 
 ```

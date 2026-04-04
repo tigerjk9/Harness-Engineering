@@ -120,6 +120,10 @@ fi
   && check_pass "docs/harness-audit.md (분기별 감사)" \
   || check_warn "docs/harness-audit.md" "분기별 하네스 감사 체크리스트 없음"
 
+[ -f "docs/decision-log.md" ] \
+  && check_pass "docs/decision-log.md (ADR 기록)" \
+  || check_warn "docs/decision-log.md" "아키텍처 결정 기록 없음 (docs/ 폴더 확인)"
+
 if [ -f "AGENTS.md" ]; then
   grep -q "Evaluator" AGENTS.md 2>/dev/null \
     && check_pass "AGENTS.md Evaluator 역할" \

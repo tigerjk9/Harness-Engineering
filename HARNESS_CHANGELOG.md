@@ -11,6 +11,9 @@
 
 | 날짜 | 파일 | 추가된 규칙 | 발견 맥락 |
 |------|------|------------|-----------|
+| 2026-04-04 | harness-init/SKILL.md | 완료 보고에 harness-health.sh 실행 단계 추가 + 참고 테이블 신규 도구 반영 | v9.0 — 온보딩 통합 |
+| 2026-04-04 | AGENTS.md | 도구 권한 매트릭스 추가 — 역할별 Read/Write/Irreversible 허용 여부 명시 | v9.0 — Goodhart's Law 방어 강화 |
+| 2026-04-04 | system-check.sh | docs/decision-log.md 존재 검사 추가 (18→19항목) | v9.0 |
 | 2026-04-04 | CLAUDE.md | 주요 명령어에 하네스 명령어 블록 분리 추가 (harness-health/verify/checkpoint) | v8.0 — 통합 마무리 |
 | 2026-04-04 | harness-evolve.sh | 추적 대상 docs/*.md + verify.sh 확장, grep 패턴 강화 | v8.0 — 하네스 진화 문서 커버리지 확장 |
 | 2026-04-04 | settings.json | UserPromptSubmit에 verify SCORE/VERDICT 표시 + 앵커 읽기 안내 강화 | v8.0 — 세션 시작 가시성 향상 |

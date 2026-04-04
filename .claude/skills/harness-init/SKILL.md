@@ -69,7 +69,17 @@ Q2가 N이면 CLAUDE.md에서 다음 섹션을 제거합니다:
 
 ---
 
-### 6단계 — 완료 보고
+### 6단계 — harness-health.sh 첫 실행 (환경 검증)
+
+```bash
+bash .claude/hooks/harness-health.sh
+```
+
+하네스 전체 상태 대시보드를 확인합니다. VERDICT=REJECTED는 `src/` 없는 템플릿의 정상 상태입니다 (ADR-001 참조).
+
+---
+
+### 7단계 — 완료 보고
 
 ```
 ✅ harness-init 완료
@@ -77,6 +87,7 @@ Q2가 N이면 CLAUDE.md에서 다음 섹션을 제거합니다:
 프로젝트: [프로젝트명]
 타입: 범용 (비교육)
 자동 감지: [N]개 명령어
+하네스 상태: bash .claude/hooks/harness-health.sh 결과 확인
 
 다음 단계:
 1. git add CLAUDE.md HARNESS_CHANGELOG.md
@@ -102,5 +113,8 @@ Q2가 N이면 CLAUDE.md에서 다음 섹션을 제거합니다:
 | `CLAUDE.md` | 하네스 헌법 |
 | `AGENTS.md` | 에이전트 역할 분리 |
 | `docs/verification-rubric.md` | 검증 루브릭 |
+| `docs/decision-log.md` | 아키텍처 결정 기록 (ADR) |
+| `docs/harness-audit.md` | 분기별 하네스 감사 |
 | `.claude/skills/README.md` | 스킬 카탈로그 |
+| `.claude/hooks/harness-health.sh` | 전체 상태 대시보드 |
 | `.claude/hooks/harness-checkpoint.sh` | Level 2 자기 복구 |

@@ -7,7 +7,7 @@
 
 ## 현재 Phase
 
-**Phase 3: 하네스 엔지니어링 고도화 v6.0 — 오토 리서치 기반 — 완료**
+**Phase 3: 하네스 엔지니어링 고도화 v6.0~v8.0 — 오토 리서치 기반 — 완료**
 
 | 항목 | 내용 |
 |------|------|
@@ -21,6 +21,16 @@
 ## 완료된 작업
 
 - [x] 프로젝트 초기 설정 및 EduHarness 하네스 구성 — 2026-03-29
+- [x] **하네스 엔지니어링 고도화 v8.0 — 통합 마무리 (3개 스토리)** — 2026-04-04
+  - [x] US-301: CLAUDE.md 하네스 명령어 블록 분리
+  - [x] US-302: harness-evolve.sh docs/*.md + verify.sh 추적 확장
+  - [x] US-303: settings.json UserPromptSubmit verify SCORE 표시 강화
+- [x] **하네스 엔지니어링 고도화 v7.0 — 규칙 자동화 갭 해소 (5개 스토리)** — 2026-04-04
+  - [x] US-201: verify.sh Dim10(함수 50줄) + Dim11(중첩 4단계) MEDIUM 검사 — 5→7개
+  - [x] US-202: system-check.sh v6.0 컴포넌트 3개 검사 추가 — 15→18항목
+  - [x] US-203: harness-health.sh 전체 상태 대시보드 신규 생성
+  - [x] US-204: execution-loop 단계 0 스프린트 계약 강제화
+  - [x] US-205: docs/decision-log.md ADR 템플릿 신규 (ADR-001/002 예시)
 - [x] **하네스 엔지니어링 고도화 v6.0 — 오토 리서치 기반 (7개 스토리)** — 2026-04-04
   - [x] US-101: progress.md 컨텍스트 앵커 4필드 구조화 + 실제 예시
   - [x] US-102: CLAUDE.md 도구 위험 분류 + 단일 기능 세션 경계 + 6단계 세션 의식
