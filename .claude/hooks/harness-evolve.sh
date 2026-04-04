@@ -41,8 +41,8 @@ if [ -z "$NEW_LINES" ]; then
   exit 0
 fi
 
-# 첫 번째 의미 있는 줄을 규칙 요약으로 사용 (60자 이내)
-RULE_SUMMARY=$(echo "$NEW_LINES" | head -1 | sed 's/^[[:space:]]*//' | cut -c1-60)
+# 첫 번째 의미 있는 줄을 규칙 요약으로 사용 (80자 이내)
+RULE_SUMMARY=$(echo "$NEW_LINES" | head -1 | sed 's/^[[:space:]]*//' | cut -c1-80)
 
 # 컨텍스트 (호출 출처)
 if $MANUAL; then

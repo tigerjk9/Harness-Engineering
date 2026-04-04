@@ -1,13 +1,13 @@
 # progress.md — 프로젝트 진행 상태
 
 > AI 에이전트는 작업 시작 전 이 파일을 읽고, 작업 완료 후 반드시 업데이트합니다.
-> 마지막 업데이트: 2026-04-04
+> 마지막 업데이트: 2026-04-04 (v10.0 버그 수정)
 
 ---
 
 ## 현재 Phase
 
-**Phase 3: 하네스 엔지니어링 고도화 v6.0~v8.0 — 오토 리서치 기반 — 완료**
+**Phase 4: 하네스 엔지니어링 전체 감사 + 버그 수정 v10.0 — 완료**
 
 | 항목 | 내용 |
 |------|------|
@@ -21,6 +21,18 @@
 ## 완료된 작업
 
 - [x] 프로젝트 초기 설정 및 EduHarness 하네스 구성 — 2026-03-29
+- [x] **전체 감사 기반 버그 수정 + 문서 현행화 v10.0 (11개 스토리)** — 2026-04-04
+  - [x] US-501: harness-health.sh 앵커 grep 패턴 수정 (파이프 테이블 대응)
+  - [x] US-502: verify.sh --self-critique 중복 제거 → @ts-ignore/console.warn/TODO 검사로 교체
+  - [x] US-503: verify.sh Dim2 이중 패널티 해소 (CRITICAL 시 H_TOTAL 미증가)
+  - [x] US-504: harness-init/SKILL.md 완료 보고 분기 안내 명확화
+  - [x] US-505: docs/verification-rubric.md Dim7~Dim11 섹션 추가 + 날짜 현행화
+  - [x] US-506: docs/harness-guide.ko.md + en.md 존재하지 않는 스킬 제거 → 현행 스킬로 교체
+  - [x] US-507: docs/harness-audit-results.md 신규 생성 (감사 결과 기록 템플릿)
+  - [x] US-508: progress.md 이슈 섹션 플레이스홀더 → '현재 알려진 이슈 없음'
+  - [x] US-509: .gitignore에 .omc/ 추가 (PRD 파일 추적 방지)
+  - [x] US-510: harness-evolve.sh RULE_SUMMARY 60→80자 확장 + 잘린 CHANGELOG 항목 수정
+  - [x] US-511: LICENSE 파일 생성 (MIT, tigerjk9, 2026)
 - [x] **하네스 엔지니어링 고도화 v8.0 — 통합 마무리 (3개 스토리)** — 2026-04-04
   - [x] US-301: CLAUDE.md 하네스 명령어 블록 분리
   - [x] US-302: harness-evolve.sh docs/*.md + verify.sh 추적 확장
@@ -67,11 +79,7 @@
 
 ## 알려진 이슈
 
-| 이슈 | 심각도 | 상태 | 담당 | 생성일 |
-|------|--------|------|------|--------|
-| [이슈 설명] | HIGH | 미해결 | - | [날짜] |
-
-> 이슈가 없으면 "현재 알려진 이슈 없음"으로 표시하세요.
+현재 알려진 이슈 없음
 
 ---
 

@@ -2,7 +2,7 @@
 
 > 이 루브릭은 EduHarness의 모든 검증 판단 기준입니다.
 > `.claude/skills/verify/SKILL.md`와 `.husky/pre-commit`이 이 기준을 따릅니다.
-> 마지막 업데이트: 2026-03-29
+> 마지막 업데이트: 2026-04-04
 
 ---
 
@@ -121,6 +121,66 @@
 | 🟡 HIGH | 환경 변수로 민감 정보 관리 | `process.env.*` 패턴 확인 |
 | 🟢 MEDIUM | 오류 메시지에 민감 정보 미포함 | catch 블록 오류 메시지 확인 |
 | 🟢 MEDIUM | 학생 ID가 URL에 노출 최소화 | API 라우트 패턴 확인 |
+
+---
+
+## 차원 7 — TypeScript any 사용 (MEDIUM)
+
+verify.sh `--self-critique` 또는 기본 실행 시 자동 탐지 (Dim7).
+
+| 심각도 | 항목 | 탐지 패턴 | 기준 |
+|---|---|---|---|
+| 🟢 MEDIUM | `: any` 또는 `as any` 사용 금지 | `grep ": any\b\|as any\b" src/` | 프로덕션 코드에서 0건 |
+
+**예외**: 테스트 파일(`.test.`, `__tests__`), 예시/목(example, mock) 파일은 검사 제외.
+
+---
+
+## 차원 8 — async try-catch 누락 (MEDIUM)
+
+verify.sh 기본 실행 시 자동 탐지 (Dim8).
+
+| 심각도 | 항목 | 탐지 패턴 | 기준 |
+|---|---|---|---|
+| 🟢 MEDIUM | async 함수에 try-catch 누락 | async 파일에 `try {` 없음 | async 사용 파일에 try-catch 존재 |
+
+**원칙**: async 함수는 모두 try-catch로 감싸야 함. 오류 메시지에 민감 정보 포함 금지.
+
+---
+
+## 차원 9 — 직접 변이 패턴 (MEDIUM)
+
+verify.sh 기본 실행 시 자동 탐지 (Dim9).
+
+| 심각도 | 항목 | 탐지 패턴 | 기준 |
+|---|---|---|---|
+| 🟢 MEDIUM | `.push(` `.splice(` `.pop()` `.shift()` `.unshift(` `.reverse()` `.sort(` | 배열 직접 변이 메서드 사용 | 0건 (spread 연산자로 대체) |
+
+**원칙**: 불변성(immutability) — 원본 배열/객체를 직접 수정하지 않고 새 객체 생성.
+
+---
+
+## 차원 10 — 함수 길이 초과 (MEDIUM)
+
+verify.sh 기본 실행 시 자동 탐지 (Dim10).
+
+| 심각도 | 항목 | 탐지 패턴 | 기준 |
+|---|---|---|---|
+| 🟢 MEDIUM | 함수 50줄 초과 | awk 연속 비공백 라인 > 50 heuristic | 모든 함수 50줄 이하 |
+
+**기준**: 연속 비공백 라인 블록이 50줄을 초과하면 함수 분리 권고.
+
+---
+
+## 차원 11 — 중첩 깊이 초과 (MEDIUM)
+
+verify.sh 기본 실행 시 자동 탐지 (Dim11).
+
+| 심각도 | 항목 | 탐지 패턴 | 기준 |
+|---|---|---|---|
+| 🟢 MEDIUM | 중첩 4단계 초과 | 10개 이상 연속 선행 공백(2-space indent 기준 5단계) | 중첩 4단계 이하 |
+
+**원칙**: 깊은 중첩은 가독성과 테스트 용이성을 저해함. Early return 패턴이나 함수 추출로 해결.
 
 ---
 

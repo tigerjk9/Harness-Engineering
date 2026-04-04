@@ -87,31 +87,42 @@ AI와 사람 모두를 위한 "현재 위치 표시판"입니다.
 
 스킬은 AI 에이전트에게 "전문 역할"을 부여합니다.
 
-### edu-component 스킬
+### /edu-harness 스킬 (메인 워크플로우)
+
+교육 앱 개발의 전체 파이프라인을 한 번에 실행합니다:
 
 ```
-[edu-component 스킬 사용] 학생 성적 표시 카드를 만들어줘.
+/edu-harness 학생 성적 표시 카드를 만들어줘.
 이름, 점수, 순위를 보여주고 WCAG 2.1 AA 접근성을 갖춰야 해.
 ```
 
-AI가 이 스킬을 로드하면:
-- 교육용 컴포넌트의 접근성 기준을 자동 적용
-- ARIA 속성 자동 포함
-- 테스트 코드 함께 생성
+내부적으로 Planner → Coder → Evaluator → Reviewer → verify.sh → HARNESS UPDATE 단계를 자동 오케스트레이션합니다.
 
-### accessibility 스킬
+### /harness 스킬 (범용 워크플로우)
+
+교육 앱이 아닌 일반 프로젝트의 기능 구현:
 
 ```
-[accessibility 스킬 사용] src/pages/quiz.tsx를 검토해줘.
-접근성 이슈를 CRITICAL/HIGH/MEDIUM으로 분류해줘.
+/harness 사용자 로그인 기능을 만들어줘.
 ```
 
-### progress-update 스킬
+### /verify 스킬 (단독 검증)
 
-작업 완료 후 자동 또는 수동으로:
+현재 코드 상태를 검증:
+
+```bash
+bash .claude/skills/verify/verify.sh        # 빠른 검증
+bash .claude/skills/verify/verify.sh --full # 전체 검증 (lint + tsc + test)
+bash .claude/skills/verify/verify.sh --self-critique  # 헌법적 자기비판 포함
 ```
-[progress-update 스킬 사용] 로그인 기능 구현 완료.
-JWT 토큰 방식 선택, 리프레시 토큰 포함.
+
+### /execution-loop 스킬 (반복 수정)
+
+REJECTED 결과를 APPROVED까지 자동 반복 수정:
+
+```
+/execution-loop verify 실패 항목을 모두 수정해줘.
+APPROVED가 될 때까지 반복해줘.
 ```
 
 ---

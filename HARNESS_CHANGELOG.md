@@ -11,6 +11,10 @@
 
 | 날짜 | 파일 | 추가된 규칙 | 발견 맥락 |
 |------|------|------------|-----------|
+| 2026-04-04 | verify.sh | --self-critique SC1~SC3 비중복 검사로 교체: @ts-ignore/console.error·warn/TODO·FIXME·HACK 탐지 | v10.0 — 전체 감사 기반 버그 수정 |
+| 2026-04-04 | verify.sh | Dim2 이중 패널티 해소 — CRITICAL 탐지 시 C_FAIL만 증가, H_TOTAL/H_PASS 변경 없음 | v10.0 — 전체 감사 기반 버그 수정 |
+| 2026-04-04 | docs/verification-rubric.md | Dim7~Dim11(TypeScript any/async try-catch/직접변이/함수길이/중첩깊이) 섹션 추가 + 날짜 현행화 | v10.0 — 전체 감사 기반 버그 수정 |
+| 2026-04-04 | .harness-hooks | harness-health.sh 앵커 grep 패턴 수정 (파이프 테이블 형식 대응), .gitignore에 .omc/ 추가 | v10.0 — 전체 감사 기반 버그 수정 |
 | 2026-04-04 | harness-init/SKILL.md | 완료 보고에 harness-health.sh 실행 단계 추가 + 참고 테이블 신규 도구 반영 | v9.0 — 온보딩 통합 |
 | 2026-04-04 | AGENTS.md | 도구 권한 매트릭스 추가 — 역할별 Read/Write/Irreversible 허용 여부 명시 | v9.0 — Goodhart's Law 방어 강화 |
 | 2026-04-04 | system-check.sh | docs/decision-log.md 존재 검사 추가 (18→19항목) | v9.0 |
@@ -39,7 +43,7 @@
 | 2026-04-04 | CLAUDE.md | 자기 복구 계층(Level 1/2) + harness-checkpoint.sh 가이드 추가 | 하네스 엔지니어링 고도화 분석 |
 | 2026-04-04 | measure.sh | 3연속 delta=0 탐지 + 탐색 공간 고착 자동 경고 강화 | objective-loop 고착 방지 |
 | 2026-04-04 | harness-init/SKILL.md | 비교육용 범용 harness-init 스킬 신규 생성 | system-check 참조 스킬 실체화 |
-| 2026-04-04 | CLAUDE.md | AI 에이전트가 오류를 만났을 때 사용하는 2단 | manual harness-evolve |
+| 2026-04-04 | CLAUDE.md | AI 에이전트가 오류를 만났을 때 사용하는 2단계 복구 전략 (Level1 재시도 / Level2 체크포인트) 추가 | manual harness-evolve |
 
 ---
 

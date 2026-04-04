@@ -92,7 +92,9 @@ bash .claude/hooks/harness-health.sh
 다음 단계:
 1. git add CLAUDE.md HARNESS_CHANGELOG.md
 2. git commit -m "harness: [프로젝트명] 초기 하네스 설정"
-3. /harness [첫 번째 기능]을 만들어줘.
+3. 교육 앱이면 → /edu-harness [첫 번째 기능]을 만들어줘.
+   범용 앱이면 → /harness [첫 번째 기능]을 만들어줘.
+   또는 → /execution-loop [첫 번째 기능]을 만들어줘.
 ```
 
 ---

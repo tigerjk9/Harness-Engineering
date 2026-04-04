@@ -84,8 +84,8 @@ fi
 echo ""
 echo "⚓ CONTEXT ANCHOR"
 if [ -f "progress.md" ] && grep -q "컨텍스트 앵커" progress.md 2>/dev/null; then
-  INTENT=$(grep -A5 "^\*\*intent\*\*" progress.md 2>/dev/null | head -1 | sed 's/.*| //' | cut -c1-60)
-  if [ -n "$INTENT" ] && [ "$INTENT" != "[이번 세션의 목적" ]; then
+  INTENT=$(grep "^| \*\*intent\*\*" progress.md 2>/dev/null | sed 's/^| \*\*intent\*\* | //' | sed 's/ |[[:space:]]*$//' | cut -c1-60)
+  if [ -n "$INTENT" ] && [[ "$INTENT" != \[* ]]; then
     echo "  ✅ 앵커 설정됨: $INTENT"
   else
     echo "  ⚠️  앵커 섹션은 있으나 아직 작성 전 (템플릿 상태)"

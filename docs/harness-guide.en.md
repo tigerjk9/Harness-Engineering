@@ -85,31 +85,42 @@ A "current position indicator" for both AI and humans.
 
 Skills give AI agents "specialized roles."
 
-### edu-component skill
+### /edu-harness skill (Main Workflow)
+
+Runs the full pipeline for educational app development in one command:
 
 ```
-[Use edu-component skill] Create a student grade display card.
+/edu-harness Create a student grade display card.
 Show name, score, and rank. Must meet WCAG 2.1 AA accessibility.
 ```
 
-When AI loads this skill:
-- Automatically applies accessibility standards for educational components
-- Includes ARIA attributes automatically
-- Generates test code alongside
+Internally orchestrates: Planner → Coder → Evaluator → Reviewer → verify.sh → HARNESS UPDATE.
 
-### accessibility skill
+### /harness skill (General Workflow)
+
+For non-educational general project features:
 
 ```
-[Use accessibility skill] Review src/pages/quiz.tsx.
-Classify accessibility issues as CRITICAL/HIGH/MEDIUM.
+/harness Create a user login feature.
 ```
 
-### progress-update skill
+### /verify skill (Standalone Verification)
 
-After task completion, automatically or manually:
+Verify current code state:
+
+```bash
+bash .claude/skills/verify/verify.sh        # Quick check
+bash .claude/skills/verify/verify.sh --full # Full check (lint + tsc + test)
+bash .claude/skills/verify/verify.sh --self-critique  # With constitutional self-critique
 ```
-[Use progress-update skill] Login feature implementation complete.
-Chose JWT token approach with refresh token support.
+
+### /execution-loop skill (Auto-fix Loop)
+
+Automatically iterates fixes until APPROVED:
+
+```
+/execution-loop Fix all verify failures.
+Keep repeating until APPROVED.
 ```
 
 ---

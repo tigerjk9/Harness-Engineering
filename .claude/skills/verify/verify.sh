@@ -53,18 +53,21 @@ fi
 
 # ── Dimension 2: 평가 무결성 (CRITICAL) ──────────────────────────
 # isCorrect 또는 correctAnswerId가 프론트엔드에 노출되면 즉시 실패
-H_TOTAL=$((H_TOTAL + 1))
+# CRITICAL 탐지 시 C_FAIL만 증가 — H_TOTAL/H_PASS 변경 없음 (이중 패널티 방지)
 if $HAS_SRC && [ -n "$ALL_FILES" ]; then
   LEAK=$(echo "$ALL_FILES" | xargs grep -l \
     "isCorrect.*:.*true\|\"isCorrect\".*true\|correctAnswerId" 2>/dev/null)
-  if [ -z "$LEAK" ]; then
-    H_PASS=$((H_PASS + 1))
-  else
+  if [ -n "$LEAK" ]; then
     C_FAIL=$((C_FAIL + 1))
+    # H_TOTAL/H_PASS 변경 없음 — CRITICAL은 C_FAIL로만 패널티
+  else
+    H_TOTAL=$((H_TOTAL + 1))
+    H_PASS=$((H_PASS + 1))
   fi
 elif ! $HAS_SRC; then
-  : # src/ 없음 — H_TOTAL만 올라감 (REJECTED 유도: 미구현 프로젝트)
+  H_TOTAL=$((H_TOTAL + 1))  # src/ 없음 — H_TOTAL만 올라감 (REJECTED 유도: 미구현 프로젝트)
 else
+  H_TOTAL=$((H_TOTAL + 1))
   H_PASS=$((H_PASS + 1))  # 파일 없음 — 통과
 fi
 
@@ -281,23 +284,23 @@ fi
 
 # ── [--self-critique] 헌법적 자기비판 (MEDIUM 항목으로 추가) ─────────
 if $SELF_CRITIQUE && [ -n "$ALL_FILES" ]; then
-  # SC1: 직접 변이 패턴 (push/splice/pop/sort)
+  # SC1: @ts-ignore/@ts-nocheck 사용 감지 (MEDIUM) — 타입 오류 억제 패턴
   M_TOTAL=$((M_TOTAL + 1))
-  SC_MUTATE=$(echo "$ALL_FILES" | xargs grep -l "\.push(\|\.splice(\|\.pop()\|\.sort(" 2>/dev/null \
+  SC_TS_IGNORE=$(echo "$ALL_FILES" | xargs grep -l "@ts-ignore\|@ts-nocheck" 2>/dev/null \
     | grep -v "\.test\.\|__tests__\|mock")
-  [ -z "$SC_MUTATE" ] && M_PASS=$((M_PASS + 1))
+  [ -z "$SC_TS_IGNORE" ] && M_PASS=$((M_PASS + 1))
 
-  # SC2: TypeScript any 사용 (자기비판 전용 추가 검사)
+  # SC2: console.error/console.warn 프로덕션 코드 잔류 감지 (MEDIUM)
   M_TOTAL=$((M_TOTAL + 1))
-  SC_ANY=$(echo "$ALL_FILES" | xargs grep -l ": any\b\|as any\b" 2>/dev/null \
-    | grep -v "\.test\.\|__tests__\|example\|mock")
-  [ -z "$SC_ANY" ] && M_PASS=$((M_PASS + 1))
+  SC_CONSOLE=$(echo "$ALL_FILES" | xargs grep -l "console\.error\|console\.warn" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|mock")
+  [ -z "$SC_CONSOLE" ] && M_PASS=$((M_PASS + 1))
 
-  # SC3: 800줄 초과 파일 (자기비판 전용 엄격 검사)
+  # SC3: TODO/FIXME/HACK 주석 프로덕션 코드 잔류 감지 (MEDIUM)
   M_TOTAL=$((M_TOTAL + 1))
-  SC_LONG=$(echo "$ALL_FILES" | xargs wc -l 2>/dev/null \
-    | awk '$1 > 800 {print $2}' | grep -v "total")
-  [ -z "$SC_LONG" ] && M_PASS=$((M_PASS + 1))
+  SC_TODO=$(echo "$ALL_FILES" | xargs grep -l "TODO:\|FIXME:\|HACK:" 2>/dev/null \
+    | grep -v "\.test\.\|__tests__\|mock")
+  [ -z "$SC_TODO" ] && M_PASS=$((M_PASS + 1))
 
   # 점수 재계산
   [ $M_TOTAL -gt 0 ] && M_RATE=$((M_PASS * 100 / M_TOTAL)) || M_RATE=100
