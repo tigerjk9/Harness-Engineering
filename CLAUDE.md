@@ -1,6 +1,6 @@
 # CLAUDE.md — EduHarness Foundation
 
-> 모든 작업 시작 전 이 파일을 읽으세요. 마지막 업데이트: 2026-04-03
+> 모든 작업 시작 전 이 파일을 읽으세요. 마지막 업데이트: 2026-04-04
 > 계층 안내: 이 파일 = 애플리케이션 하네스 | `.claude/skills/` = 레포지토리 하네스(수정 금지)
 
 ---
@@ -202,4 +202,5 @@ bash .claude/hooks/system-check.sh            # 🔧 환경 진단
 | `docs/example-walkthrough.md` | 실전 하네스 구축 워크스루 |
 | `docs/decision-log.md` | 아키텍처 결정 기록 (ADR) — "왜 이렇게 됐는가" |
 | `docs/harness-audit.md` | 분기별 하네스 가정 감사 체크리스트 |
+| `docs/harness-audit-results.md` | 감사 결과 기록 템플릿 |
 | `.claude/skills/README.md` | 스킬 카탈로그 |

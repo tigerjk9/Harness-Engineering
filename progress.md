@@ -1,7 +1,7 @@
 # progress.md — 프로젝트 진행 상태
 
 > AI 에이전트는 작업 시작 전 이 파일을 읽고, 작업 완료 후 반드시 업데이트합니다.
-> 마지막 업데이트: 2026-04-04 (v10.0 버그 수정)
+> 마지막 업데이트: 2026-04-04 (harness-init 삭제 + 문서 현행화)
 
 ---
 
@@ -21,6 +21,11 @@
 ## 완료된 작업
 
 - [x] 프로젝트 초기 설정 및 EduHarness 하네스 구성 — 2026-03-29
+- [x] **harness-init 삭제 + README/docs 현행화** — 2026-04-04
+  - [x] harness-init 스킬 삭제 (edu-harness-init이 교육/범용 앱 모두 커버하므로 중복 제거)
+  - [x] README.md / README.en.md — harness-init 참조 전면 제거
+  - [x] progress.md / CLAUDE.md / .claude/skills/README.md 현행화
+  - [x] .omc/PRD-SUMMARY.md 업데이트
 - [x] **전체 감사 기반 버그 수정 + 문서 현행화 v10.0 (11개 스토리)** — 2026-04-04
   - [x] US-501: harness-health.sh 앵커 grep 패턴 수정 (파이프 테이블 대응)
   - [x] US-502: verify.sh --self-critique 중복 제거 → @ts-ignore/console.warn/TODO 검사로 교체
