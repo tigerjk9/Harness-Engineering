@@ -33,15 +33,15 @@ AI에게 매번 맥락을 설명하는 대신, **AI가 일관된 품질로 일�
 
 GitHub **"Use this template"** 버튼 → 새 리포지토리 생성
 
-### 2단계: 하네스 초기화
+### 2단계: 한 번에 시작하기
 
 ```
-/edu-harness-init
+/quickstart
 ```
 
-질문 2개(프로젝트명 + 교육 앱 여부) → 나머지는 `package.json` 자동 감지 + 첫 기능 구현 시 자동 추론
+환경 점검 → CLAUDE.md 초기화 → 첫 검증까지 자동으로 처리합니다. 다른 스킬을 먼저 실행할 필요 없습니다.
 
-> **지연 채움(Lazy-fill)**: 기술 스택·사용자 설명은 첫 `/edu-harness` 요청 문장에서 자동으로 읽어옵니다.
+> 더 세밀한 초기화가 필요하면 `/edu-harness-init`를 직접 사용하세요.
 
 ### 3단계: 첫 기능 구현
 
@@ -145,8 +145,9 @@ edu-harness/
 │   │   ├── harness-checkpoint.sh # 💾 Level 2 자기 복구 (git stash)
 │   │   └── harness-evolve.sh    # 📝 규칙 변경 자동 기록
 │   └── skills/
-│       ├── edu-harness/         # 🎓 메인 진입점 (7단계 사이클)
-│       ├── edu-harness-init/    # 🔧 하네스 초기화 (2질문, 교육/범용 모두)
+│       ├── quickstart/          # 🚀 원클릭 시작 (환경점검+초기화+검증 one-shot)
+│       ├── edu-harness/         # 🎓 기능 구현 진입점 (7단계 사이클)
+│       ├── edu-harness-init/    # 🔧 세밀한 하네스 초기화 (2질문)
 │       ├── execution-loop/      # 🔄 합격 기준까지 반복
 │       ├── objective-loop/      # 🎯 수치 목표까지 반복 + 하네스 진화
 │       └── verify/              # ✅ 6차원 검증
@@ -158,7 +159,8 @@ edu-harness/
 
 | 스킬 | 용도 | 사용 시점 |
 |------|------|-----------|
-| `/edu-harness-init` | 하네스 초기 설정 (교육/범용 앱 모두) | 클론 직후 1회 |
+| `/quickstart` | **원클릭 시작** — 환경 점검·초기화·첫 검증 one-shot | **클론 직후 맨 처음** |
+| `/edu-harness-init` | 세밀한 하네스 초기 설정 | quickstart 후 재설정 필요 시 |
 | `/edu-harness` | 7단계 기능 구현 워크플로우 | 모든 기능 구현 |
 | `/execution-loop` | 합격 기준 충족까지 자동 반복 | REJECTED 시 |
 | `/objective-loop` | 수치 목표 달성 + 하네스 진화 | 점수 개선 목표 시 |

@@ -1,6 +1,10 @@
 ---
 name: objective-loop
-description: verify 점수를 올리거나 수치 목표 달성이 필요할 때 반드시 이 스킬을 사용할 것. 'REJECTED를 APPROVED로', 'Pedagogy Reviewer 🔴 0개', 'SCORE 80 이상' 등 수치 목표가 있으면 이 스킬. 코드와 하네스(rubric)를 동시에 진화시키며 Goodhart's Law 방어 내장.
+description: >
+  verify 점수를 올리거나 수치 목표 달성이 필요할 때 반드시 이 스킬을 사용할 것.
+  'REJECTED를 APPROVED로', 'improve score', 'raise score', 'fix REJECTED', 'optimize to pass',
+  'SCORE 80 이상', 'meet the threshold', 'get to APPROVED'가 포함된 요청 모두 해당.
+  코드와 하네스(rubric)를 동시에 진화시키며 Goodhart's Law 방어 내장.
 ---
 
 # objective-loop 스킬

@@ -33,15 +33,15 @@ Instead of explaining context to AI every time, it's the practice of **designing
 
 Click **"Use this template"** on GitHub → Create new repository
 
-### Step 2: Initialize the harness
+### Step 2: Start in one shot
 
 ```
-/edu-harness-init
+/quickstart
 ```
 
-Just 2 questions (project name + education app Y/N) → the rest is auto-detected from `package.json` and inferred at first use.
+Automatically handles environment check → CLAUDE.md initialization → first verification. No need to run other skills first.
 
-> **Lazy-fill**: Tech stack and user descriptions are read automatically from your first `/edu-harness` request. No manual editing needed.
+> For more granular initialization, you can run `/edu-harness-init` directly.
 
 ### Step 3: Build your first feature
 
@@ -145,8 +145,9 @@ edu-harness/
 │   │   ├── harness-checkpoint.sh # 💾 Level 2 self-repair (git stash)
 │   │   └── harness-evolve.sh    # 📝 Auto-log rule changes
 │   └── skills/
-│       ├── edu-harness/         # 🎓 Main entry point (7-stage cycle)
-│       ├── edu-harness-init/    # 🔧 Harness initialization (2 questions)
+│       ├── quickstart/          # 🚀 One-shot start (env check + init + verify)
+│       ├── edu-harness/         # 🎓 Feature entry point (7-stage cycle)
+│       ├── edu-harness-init/    # 🔧 Granular harness initialization (2 questions)
 │       ├── execution-loop/      # 🔄 Repeat until passing
 │       ├── objective-loop/      # 🎯 Repeat until score target + harness evolution
 │       └── verify/              # ✅ 6-dimension verification
@@ -158,7 +159,8 @@ edu-harness/
 
 | Skill | Purpose | When to use |
 |-------|---------|-------------|
-| `/edu-harness-init` | Initialize harness (education or general app) | Once after clone |
+| `/quickstart` | **One-shot start** — env check, init, first verify | **First thing after clone** |
+| `/edu-harness-init` | Granular harness initialization | When re-init needed |
 | `/edu-harness` | 7-stage feature implementation workflow | Every feature |
 | `/execution-loop` | Auto-repeat until passing criteria met | When REJECTED |
 | `/objective-loop` | Auto-repeat until score target + harness evolution | Score improvement |

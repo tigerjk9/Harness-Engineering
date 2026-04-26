@@ -13,12 +13,21 @@
 #   1 — FAIL 항목 있음 (진행 불가 권장)
 
 BRIEF=false
-[ "$1" = "--brief" ] && BRIEF=true
+VERBOSE=false
+for _a in "$@"; do
+  case "$_a" in
+    --brief)   BRIEF=true ;;
+    --verbose) VERBOSE=true ;;
+  esac
+done
 
 PASS=0; FAIL=0; WARN=0
 
 # ── 출력 헬퍼 ─────────────────────────────────────────────────────
-check_pass() { $BRIEF || echo "  ✅ $1"; PASS=$((PASS+1)); }
+# brief:   요약 한 줄만 (훅용)
+# default: WARN + FAIL만 표시 (조용한 기본값)
+# verbose: 전체 (✅ 포함)
+check_pass() { $VERBOSE && echo "  ✅ $1"; PASS=$((PASS+1)); }
 check_fail() { echo "  ❌ $1 — $2"; FAIL=$((FAIL+1)); }
 check_warn() { $BRIEF || echo "  ⚠️  $1 — $2"; WARN=$((WARN+1)); }
 

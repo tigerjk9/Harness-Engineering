@@ -1,6 +1,10 @@
 ---
 name: verify
-description: 기능 구현이 완료되거나 '/verify 기능명'이 입력되면 반드시 이 스킬을 사용할 것. 6개 차원(기술/평가무결성/심리안전/접근성/데이터보호/성능)에서 교육 앱 코드를 검증한다. isCorrect API 노출, 형성/총괄 혼용, 부정적 피드백 메시지 감지에 특화.
+description: >
+  기능 구현이 완료되거나 '/verify 기능명'이 입력되면 반드시 이 스킬을 사용할 것.
+  'verify', 'check', 'validate', 'run verification', 'is this passing?', 'check quality'가 포함된 요청도 해당.
+  6개 차원(기술/평가무결성/심리안전/접근성/데이터보호/성능)에서 교육 앱 코드를 검증한다.
+  isCorrect API 노출, 형성/총괄 혼용, 부정적 피드백 메시지 감지에 특화.
 ---
 
 # verify 스킬

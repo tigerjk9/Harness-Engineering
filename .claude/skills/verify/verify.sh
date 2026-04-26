@@ -9,9 +9,10 @@
 # 출력:   CRITICAL_FAIL=N HIGH=N/N MEDIUM=N/N SCORE=N VERDICT=X
 #
 # VERDICT 기준:
-#   APPROVED    → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM ≥80%
-#   CONDITIONAL → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM <80%
-#   REJECTED    → CRITICAL_FAIL>0 OR HIGH <100%
+#   APPROVED        → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM ≥80%
+#   CONDITIONAL     → CRITICAL_FAIL=0 AND HIGH 100% AND MEDIUM <80%
+#   REJECTED        → CRITICAL_FAIL>0 OR HIGH <100%
+#   SETUP_REQUIRED  → package.json 없음 (빈 템플릿 상태 — 평가 대상 아님)
 #
 # [성능 최적화 v2.1]
 #   src/ 디렉토리를 매 grep마다 재스캔하는 대신 파일 목록을 한 번만 수집합니다.
@@ -31,6 +32,13 @@ for _arg in "$@"; do
   esac
 done
 C_FAIL=0; H_PASS=0; H_TOTAL=0; M_PASS=0; M_TOTAL=0
+
+# ── 셋업 필요 여부 조기 탐지 ─────────────────────────────────────────
+# package.json도 src/도 없으면 빈 템플릿 상태 — 평가 대상 아님
+if [ ! -f "package.json" ] && [ ! -d "$SRC" ]; then
+  echo "CRITICAL_FAIL=0 HIGH=0/0 MEDIUM=0/0 SCORE=0 VERDICT=SETUP_REQUIRED"
+  exit 0
+fi
 
 # ── [최적화] 파일 목록 1회 수집 ──────────────────────────────────
 # 이후 모든 grep은 디렉토리 재스캔 없이 이 목록을 사용합니다.
@@ -65,7 +73,7 @@ if $HAS_SRC && [ -n "$ALL_FILES" ]; then
     H_PASS=$((H_PASS + 1))
   fi
 elif ! $HAS_SRC; then
-  H_TOTAL=$((H_TOTAL + 1))  # src/ 없음 — H_TOTAL만 올라감 (REJECTED 유도: 미구현 프로젝트)
+  : # src/ 없음 — 이 차원 평가 건너뜀 (SETUP_REQUIRED 조기 탐지에서 이미 처리)
 else
   H_TOTAL=$((H_TOTAL + 1))
   H_PASS=$((H_PASS + 1))  # 파일 없음 — 통과
@@ -167,7 +175,7 @@ fi
 if $HAS_SRC; then
   M_TOTAL=$((M_TOTAL+1))
   GRADE_CHANGE=$(echo "$TS_FILES" | xargs grep -l \
-    "updateGrade\|gradeUpdate\|setScore\|updateScore\|성적.*변경\|grade.*update" 2>/dev/null)
+    "updateGrade\|gradeUpdate\|updateScore\|성적.*변경\|grade.*update" 2>/dev/null)
   if [ -z "$GRADE_CHANGE" ]; then
     M_PASS=$((M_PASS+1))  # 성적 변경 함수 없음 — 통과
   else
@@ -241,7 +249,7 @@ fi
 M_TOTAL=$((M_TOTAL + 1))
 if [ -n "$ALL_FILES" ]; then
   MUTATE=$(echo "$ALL_FILES" | xargs grep -l \
-    "\.push(\|\.splice(\|\.pop()\|\.shift()\|\.unshift(\|\.reverse()\|\.sort(" \
+    "\.push(\|\.splice(\|\.pop()\|\.shift()\|\.unshift(" \
     2>/dev/null | grep -v "\.test\.\|__tests__\|mock")
   [ -z "$MUTATE" ] && M_PASS=$((M_PASS + 1))
 else

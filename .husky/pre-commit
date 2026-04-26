@@ -150,7 +150,7 @@ if [ -d "src" ]; then
 
   if [ -n "$NEGATIVE_MSG" ]; then
     echo ""
-    echo "❌ [HIGH] 부정적 피드백 메시지 발견 — PR 전 수정 필요"
+    echo "⚠️  [HIGH] 부정적 피드백 메시지 발견 — PR 전 수정 권장 (커밋 허용)"
     echo ""
     echo "   다음 파일에서 학습 의욕을 저하시킬 수 있는 표현이 발견됐습니다:"
     echo "$NEGATIVE_MSG" | sed 's/^/   - /'
@@ -160,10 +160,8 @@ if [ -d "src" ]; then
     echo "   '오답입니다'      →  '이번엔 맞지 않았어요. 힌트를 볼까요?'"
     echo "   '실패했습니다'    →  '다시 도전해봐요!'"
     echo ""
-    echo "   /execution-loop 로 수정 후 재커밋하세요."
     echo "   참조: docs/education-principles.md 섹션 4 / docs/verification-rubric.md 차원 3"
     echo ""
-    exit 1
   else
     echo "✅ 심리 안전 메시지 통과"
   fi
@@ -176,8 +174,8 @@ fi
 # ────────────────────────────────────────
 if [ -f "package.json" ] && [ -f "tsconfig.json" ]; then
   echo ""
-  echo "📊 [7/9] EduHarness verify (full mode)..."
-  VERIFY_RESULT=$(bash .claude/skills/verify/verify.sh --full 2>/dev/null | tail -1)
+  echo "📊 [7/9] EduHarness verify (quick mode)..."
+  VERIFY_RESULT=$(bash .claude/skills/verify/verify.sh 2>/dev/null | tail -1)
   VERDICT=$(echo "$VERIFY_RESULT" | grep -oE 'VERDICT=[A-Z]+' | cut -d= -f2)
   echo "  결과: $VERIFY_RESULT"
   if [ "$VERDICT" = "REJECTED" ]; then

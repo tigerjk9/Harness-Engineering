@@ -1,6 +1,11 @@
 ---
 name: edu-harness
-description: '만들어줘', '구현해줘', '추가해줘', '설계해줘'가 포함된 모든 교육 앱 기능 요청에 반드시 이 스킬을 사용할 것. 퀴즈, 레슨, 학습 진도, 교사 관리, 평가, 피드백, 학생 인증 기능 모두 해당. 계획→교육설계→구현→교육학검토→검증→하네스진화 전체 사이클을 실행한다.
+description: >
+  '만들어줘', '구현해줘', '추가해줘', '설계해줘', 'build', 'implement', 'add feature', 'create', 'design', 'make'가
+  포함된 모든 교육 앱 기능 요청에 반드시 이 스킬을 사용할 것.
+  퀴즈·레슨·학습 진도·교사 관리·평가·피드백·학생 인증 /
+  quiz, lesson, progress tracking, teacher dashboard, assessment, feedback, student auth 모두 해당.
+  계획→교육설계→구현→교육학검토→검증→하네스진화 전체 사이클을 실행한다.
 ---
 
 # edu-harness 스킬

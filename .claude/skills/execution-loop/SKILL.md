@@ -1,6 +1,9 @@
 ---
 name: execution-loop
-description: 구현 후 REJECTED 판정이 나오거나 '/execution-loop'을 입력하면 반드시 이 스킬을 사용할 것. 합격 기준 충족까지 수정→검증→반복을 자동화한다. 최대 5회 반복, 루프 상태를 .execution-loop-state 파일에 기록한다.
+description: >
+  구현 후 REJECTED 판정이 나오거나 '/execution-loop'을 입력하면 반드시 이 스킬을 사용할 것.
+  'fix it', 'retry', 'auto-fix', 'keep trying', 'iterate until passing', 'loop until approved'가 포함된 요청도 해당.
+  합격 기준 충족까지 수정→검증→반복을 자동화한다. 최대 5회 반복, 루프 상태를 .execution-loop-state 파일에 기록한다.
 ---
 
 # execution-loop 스킬

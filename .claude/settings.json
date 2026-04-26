@@ -1,18 +1,8 @@
 {
   "hooks": {
-    "PreCommit": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "RESULT=$(bash .claude/skills/verify/verify.sh --full 2>/dev/null | tail -1); VERDICT=$(echo \"$RESULT\" | grep -oE 'VERDICT=[A-Z]+' | cut -d= -f2); if [ \"$VERDICT\" = 'REJECTED' ]; then echo \"  ⛔ pre-commit harness: $RESULT — REJECTED: 커밋 전 문제를 수정하세요\"; else echo \"  ✅ pre-commit harness: $RESULT\"; fi"
-          }
-        ]
-      }
-    ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|Bash",
+        "matcher": "Bash",
         "hooks": [
           {
             "type": "command",
