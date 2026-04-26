@@ -199,7 +199,9 @@ bash .claude/hooks/system-check.sh            # 🔧 환경 진단
 | `progress.md` | 현재 진행 상황과 다음 할 일 |
 | `AGENTS.md` | 에이전트 역할 분리 |
 | `docs/education-principles.md` | 형성/총괄 평가, Bloom's taxonomy, UDL 원칙 |
-| `docs/example-walkthrough.md` | 실전 하네스 구축 워크스루 |
+| `docs/example-walkthrough.md` | 실전 하네스 구축 워크스루 (+ REJECTED→복구 시나리오) |
+| `docs/customization-guide.ko.md` | 하네스 구축 가이드 (한국어) |
+| `docs/customization-guide.en.md` | Harness build guide (English) |
 | `docs/decision-log.md` | 아키텍처 결정 기록 (ADR) — "왜 이렇게 됐는가" |
 | `docs/harness-audit.md` | 분기별 하네스 가정 감사 체크리스트 |
 | `docs/harness-audit-results.md` | 감사 결과 기록 템플릿 |

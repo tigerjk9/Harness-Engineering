@@ -10,11 +10,13 @@
 ```bash
 git clone https://github.com/[your-org]/edu-harness.git edupquiz-mini
 cd edupquiz-mini
-npx create-next-app . --typescript --tailwind
-npm install
+# Claude Code를 열고 /quickstart 실행
 ```
 
-EduHarness 템플릿이 복사됐고, Next.js 프로젝트가 초기화됐습니다.
+`/quickstart`가 환경 진단 → Next.js 초기화 → CLAUDE.md 채우기 → 첫 VERDICT 확인까지
+한 번에 처리합니다. `npx create-next-app .`을 직접 실행하면 기존 파일과 충돌이 생기므로
+반드시 `/quickstart`를 통해 진행하세요.
+
 이제 파이프라인 6단계를 따라갑니다.
 
 ---
@@ -256,9 +258,65 @@ commit 4909004  Initial commit
 
 ---
 
+## 시나리오: REJECTED → 복구
+
+실제 프로젝트에서 자주 마주치는 상황입니다. REJECTED 판정을 받았을 때 당황하지 않고
+체계적으로 복구하는 흐름을 보여줍니다.
+
+**상황**: 퀴즈 응시 기능을 구현했는데 verify.sh 결과가 REJECTED로 나왔다.
+
+```bash
+bash .claude/skills/verify/verify.sh
+# 출력:
+# CRITICAL_FAIL=1 HIGH=3/5 MEDIUM=6/10 SCORE=52 VERDICT=REJECTED
+```
+
+### 복구 흐름
+
+**1단계 — 원인 파악**
+```
+/verify 지금 REJECTED 원인을 분석해줘. 어떤 차원에서 실패했어?
+```
+```
+verify 결과 분석:
+🔴 CRITICAL (차원 2 — 평가 무결성): API 응답에 isCorrect 필드 노출
+🟡 HIGH: 테스트 커버리지 42% (목표 80%), 오답 메시지 2개 금지 표현 사용
+```
+
+**2단계 — 체크포인트 확인**
+```bash
+bash .claude/hooks/harness-checkpoint.sh list
+# 출력: 2026-04-26_14:32 — "퀴즈 기본 구조 구현 전"
+```
+→ 심각한 오염이 없으면 그대로 수정 진행. 여러 파일이 엉켜 있으면 롤백 후 재시작.
+
+**3단계 — execution-loop으로 자동 수정**
+```
+/execution-loop REJECTED 항목을 수정해줘.
+우선순위: CRITICAL(isCorrect 노출) → HIGH(테스트) → HIGH(오답 메시지) 순으로.
+APPROVED될 때까지 반복해줘.
+```
+
+**4단계 — 루프 결과 확인**
+```bash
+# 루프 1: isCorrect 서버 사이드 채점으로 이동 → CRITICAL 해소
+bash .claude/skills/verify/verify.sh
+# CRITICAL_FAIL=0 HIGH=2/5 MEDIUM=7/10 SCORE=68 VERDICT=CONDITIONAL
+
+# 루프 2: 테스트 추가, 오답 메시지 수정
+bash .claude/skills/verify/verify.sh
+# CRITICAL_FAIL=0 HIGH=5/5 MEDIUM=9/10 SCORE=92 VERDICT=APPROVED ✅
+```
+
+**핵심**: REJECTED는 실패가 아니라 하네스가 정상 작동하는 증거입니다.
+VERDICT가 없는 팀은 REJECTED를 모른 채 배포합니다.
+
+---
+
 ## 핵심 교훈
 
 1. **하네스는 처음부터 완벽하지 않습니다.** "재시도 버튼" 규칙은 AI가 실수한 후에야 명시됐습니다.
 2. **암묵지는 개발 중에 발견됩니다.** 당연하다고 생각한 것이 AI에겐 당연하지 않습니다.
 3. **measure.sh 수치(20→95)가 진짜 증거입니다.** "잘 됐다" 는 주관적 판단, 숫자는 객관적 증거.
-4. **git 히스토리가 하네스의 성장을 기록합니다.** 다음 프로젝트는 여기서 출발합니다.
+4. **REJECTED는 하네스가 작동하는 증거입니다.** 판정 없이 넘어가는 팀이 더 위험합니다.
+5. **git 히스토리가 하네스의 성장을 기록합니다.** 다음 프로젝트는 여기서 출발합니다.
